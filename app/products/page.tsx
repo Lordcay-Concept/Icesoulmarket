@@ -7,6 +7,7 @@ import { ProductFiltersComponent } from '@/components/product/ProductFilters'
 import { Pagination } from '@/components/product/Pagination'
 import { DatabaseService } from '@/lib/services/database.service'
 import { ProductFilters } from '@/types/product.types'
+import { Suspense } from 'react'
 import { Gamepad2, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
@@ -96,7 +97,9 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             </div>
             
             <div className="mb-8">
-              <ProductFiltersComponent categories={categories || []} />
+              <Suspense fallback={<div className="h-24" />}>
+                <ProductFiltersComponent categories={categories || []} />
+              </Suspense>
             </div>
             
             <ProductList 
@@ -108,7 +111,9 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
               }
             />
 
-            <Pagination currentPage={currentPage} totalPages={totalPages} />
+            <Suspense fallback={null}>
+              <Pagination currentPage={currentPage} totalPages={totalPages} />
+            </Suspense>
           </div>
         </main>
         <Footer />

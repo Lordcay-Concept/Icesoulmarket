@@ -1,12 +1,11 @@
 // app/login/page.tsx
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from '@/components/ui/use-toast'
@@ -14,13 +13,13 @@ import { Eye, EyeOff, Mail, Lock, Gamepad2, Sparkles, Shield, Crown, Home, Arrow
 import { useAuth } from '@/lib/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams?.get('redirect') || '/'
   const { user, signIn } = useAuth()
-  const supabase = createClient() 
-  
+  const supabase = createClient()
+
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -28,91 +27,73 @@ export default function LoginPage() {
     password: '',
   })
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setIsLoading(true)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
 
-  try {
-    await signIn(formData.email, formData.password)
+    try {
+      await signIn(formData.email, formData.password)
 
-    const { data: { user: freshUser } } = await supabase.auth.getUser()
+      const { data: { user: freshUser } } = await supabase.auth.getUser()
 
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('is_admin')
-      .eq('id', freshUser?.id)
-      .single()
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', freshUser?.id)
+        .single()
 
-    if (profileError) {
-      console.error('Profile lookup failed:', profileError.message)
+      if (profileError) {
+        console.error('Profile lookup failed:', profileError.message)
+      }
+
+      toast({
+        title: 'Welcome back, Gamer! 🎮',
+        description: 'You have been successfully logged in.',
+        variant: 'success',
+      })
+
+      const destination = profile?.is_admin ? '/admin/dashboard' : redirect
+      window.location.href = destination
+    } catch (error) {
+      toast({
+        title: 'Login failed',
+        description: 'Invalid email or password. Please try again.',
+        variant: 'destructive',
+      })
+      setIsLoading(false)
     }
-
-    toast({
-      title: 'Welcome back, Gamer! 🎮',
-      description: 'You have been successfully logged in.',
-      variant: 'success',
-    })
-
-
-    const destination = profile?.is_admin ? '/admin/dashboard' : redirect
-    window.location.href = destination
-  } catch (error) {
-    toast({
-      title: 'Login failed',
-      description: 'Invalid email or password. Please try again.',
-      variant: 'destructive',
-    })
-    setIsLoading(false)
   }
-}
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-emerald-950/30" />
       <div className="absolute inset-0 grid-overlay opacity-20" />
       <div className="absolute inset-0 scanline" />
-      
-      {/* Floating Orbs */}
+
       <motion.div
         className="absolute top-20 left-20 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl"
-        animate={{ 
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-        }}
+        animate={{ x: [0, 100, 0], y: [0, -50, 0] }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       />
       <motion.div
         className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-emerald-400/5 blur-3xl"
-        animate={{ 
-          x: [0, -100, 0],
-          y: [0, 50, 0],
-        }}
+        animate={{ x: [0, -100, 0], y: [0, 50, 0] }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
       />
 
-      {/* Floating Particles */}
       {[...Array(30)].map((_, i) => (
         <motion.div
           key={i}
           className="absolute h-1 w-1 rounded-full bg-emerald-400/20"
-          initial={{
-            x: Math.random() * 100 + '%',
-            y: Math.random() * 100 + '%',
-          }}
-          animate={{
-            y: ['0%', '100%'],
-            opacity: [0, 0.5, 0],
-          }}
+          initial={{ x: Math.random() * 100 + '%', y: Math.random() * 100 + '%' }}
+          animate={{ y: ['0%', '100%'], opacity: [0, 0.5, 0] }}
           transition={{
             duration: 10 + Math.random() * 20,
             repeat: Infinity,
             ease: 'linear',
             delay: Math.random() * 10,
           }}
-          style={{
-            left: Math.random() * 100 + '%',
-          }}
+          style={{ left: Math.random() * 100 + '%' }}
         />
       ))}
 
@@ -123,7 +104,6 @@ const handleSubmit = async (e: React.FormEvent) => {
         className="w-full max-w-md relative z-10"
       >
         <div className="glass rounded-2xl border border-emerald-400/20 shadow-2xl shadow-emerald-400/5 p-8">
-          {/* Logo & Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="relative">
@@ -135,7 +115,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <p className="text-xs text-gray-500">Premium Gaming Store</p>
               </div>
             </div>
-            
+
             <h2 className="text-2xl font-bold text-white mt-4">
               Welcome Back, <span className="text-emerald-400 neon-glow">Gamer</span>
             </h2>
@@ -143,13 +123,12 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
 
           <div className="flex justify-start mb-4">
-          <Link href="/" className="flex items-center gap-2 text-sm text-gray-400 hover:text-emerald-400 transition-colors">
-            <Home className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
+            <Link href="/" className="flex items-center gap-2 text-sm text-gray-400 hover:text-emerald-400 transition-colors">
+              <Home className="h-4 w-4" />
+              Back to Home
+            </Link>
+          </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-gray-300 text-sm font-medium">Email Address</Label>
@@ -195,8 +174,8 @@ const handleSubmit = async (e: React.FormEvent) => {
               </div>
             </div>
 
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full h-12 rounded-xl gaming-btn text-lg font-bold mt-2"
               disabled={isLoading}
             >
@@ -214,7 +193,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             </Button>
           </form>
 
-          {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-400">
               Don&apos;t have an account?{' '}
@@ -222,7 +200,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 Create one
               </Link>
             </p>
-            
+
             <div className="flex items-center justify-center gap-4 mt-4 text-xs text-gray-500">
               <div className="flex items-center gap-1">
                 <Shield className="h-3 w-3" />
@@ -243,5 +221,17 @@ const handleSubmit = async (e: React.FormEvent) => {
         </div>
       </motion.div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="text-gray-400">Loading...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
