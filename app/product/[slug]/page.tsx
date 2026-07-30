@@ -26,6 +26,8 @@ interface ProductDetailPageProps {
 type FeatureValue = string | number | boolean | string[]
 type FeatureEntry = [string, FeatureValue]
 
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
   const product = await ProductService.getProductBySlug(params.slug)
 

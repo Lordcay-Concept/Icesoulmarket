@@ -131,6 +131,11 @@ export default function AdminProductsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path: '/categories' }),
       })
+        await fetch('/api/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: `/product/${productData.slug}` }),
+        })
 
       setIsModalOpen(false)
       setEditingProduct(null)
@@ -153,33 +158,49 @@ export default function AdminProductsPage() {
   }))
 }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return
+  const handleDelete = async (id: string, slug: string) => {  // add slug param
+  if (!confirm('Are you sure you want to delete this product?')) return
+  
+  try {
+    const supabase = DatabaseService.getSupabaseClient()
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id)
     
-    try {
-      const supabase = DatabaseService.getSupabaseClient()
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', id)
-      
-      if (error) throw error
-      
-      toast({
-        title: 'Success!',
-        description: 'Product deleted successfully',
-        variant: 'success',
-      })
-      loadData()
-    } catch (error) {
-      console.error('Error deleting product:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to delete product',
-        variant: 'destructive',
-      })
-    }
+    if (error) throw error
+    
+    await fetch('/api/revalidate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: '/products' }),
+    })
+    await fetch('/api/revalidate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: '/categories' }),
+    })
+    await fetch('/api/revalidate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: `/product/${slug}` }),
+    })
+    
+    toast({
+      title: 'Success!',
+      description: 'Product deleted successfully',
+      variant: 'success',
+    })
+    loadData()
+  } catch (error) {
+    console.error('Error deleting product:', error)
+    toast({
+      title: 'Error',
+      description: 'Failed to delete product',
+      variant: 'destructive',
+    })
   }
+}
 
   const resetForm = () => {
     setFormData({
@@ -325,7 +346,7 @@ export default function AdminProductsPage() {
                   variant="outline"
                   size="sm"
                   className="flex-1 border-red-400/20 text-red-400 hover:bg-red-400/10"
-                  onClick={() => handleDelete(product.id)}
+                  onClick={() => handleDelete(product.id, product.slug)}
                 >
                   <Trash2 className="h-3 w-3 mr-1" />
                   Delete
