@@ -5,6 +5,7 @@ import { useEffect, useState, useRef  } from 'react'
 import { type User } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
 import { useCartStore } from '@/lib/stores/cartStore'
+import { ensureCartHydrated } from '@/lib/stores/cartStore'
 import { useRouter } from 'next/navigation'
 
 interface UserProfile {
@@ -107,7 +108,8 @@ export function useAuth(): UseAuthReturn {
 
         if (lastSyncedUserId.current !== user.id) {
           lastSyncedUserId.current = user.id
-          useCartStore.getState().loadUserCart(user.id)
+          await ensureCartHydrated() 
+          await useCartStore.getState().loadUserCart(user.id)
         }
       }
       } catch (error) {

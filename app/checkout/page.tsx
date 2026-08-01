@@ -22,7 +22,7 @@ import Link from 'next/link'
 export default function CheckoutPage() {
   const router = useRouter()
   const { user, loading } = useAuth()
-  const { items, total, clearCart } = useCartStore()
+  const { items, total, clearCart, hasHydrated} = useCartStore()
   const { formatPrice } = useCurrency()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isHydrated, setIsHydrated] = useState(false)
@@ -49,7 +49,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (orderPlacedRef.current) return
 
-    if (isHydrated && items.length === 0 && !loading) {
+    if (hasHydrated && items.length === 0 && !loading) {
       toast({
         title: 'Cart is Empty',
         description: 'Please add items to your cart before checking out.',
@@ -57,7 +57,7 @@ export default function CheckoutPage() {
       })
       router.push('/products')
     }
-  }, [items, router, isHydrated, loading])
+  }, [items, router, hasHydrated, loading])
 
   // ✅ Calculate subtotal
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
@@ -177,7 +177,7 @@ export default function CheckoutPage() {
     }
   }
 
-  if (!isHydrated || loading) {
+  if (!hasHydrated || loading) {
     return (
       <>
         <Navbar />

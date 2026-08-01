@@ -11,7 +11,6 @@ import { Separator } from '@/components/ui/separator'
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Gamepad2, Sparkles } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { toast } from '@/components/ui/use-toast'
 import { motion } from 'framer-motion'
 import { useCurrency } from '@/lib/hooks/useCurrency'
@@ -22,15 +21,11 @@ export default function CartPage() {
     total, 
     updateQuantity, 
     removeItem,
-    clearCart 
+    clearCart,
+    hasHydrated,       
   } = useCartStore()
   
-  const [isHydrated, setIsHydrated] = useState(false)
   const { formatPrice } = useCurrency()
-  
-  useEffect(() => {
-    setIsHydrated(true)
-  }, [])
 
   const handleUpdateQuantity = (id: string, currentQuantity: number, change: number) => {
     const newQuantity = currentQuantity + change
@@ -56,7 +51,8 @@ export default function CartPage() {
     })
   }
 
-  if (!isHydrated) {
+
+  if (!hasHydrated) {
     return (
       <>
         <Navbar />
@@ -126,7 +122,6 @@ export default function CartPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Cart Items */}
               <div className="lg:col-span-2 space-y-4">
                 {items.map((item, index) => (
                   <motion.div
@@ -138,7 +133,6 @@ export default function CartPage() {
                     <Card className="glass border-emerald-400/20 rounded-2xl hover:border-emerald-400/40 transition-all">
                       <CardContent className="p-4">
                         <div className="flex gap-4">
-                          {/* Product Image */}
                           <div className="relative w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-black/50 border border-emerald-400/10">
                             <Image
                               src={item.image}
@@ -148,7 +142,6 @@ export default function CartPage() {
                             />
                           </div>
                           
-                          {/* Product Info */}
                           <div className="flex-grow space-y-2">
                             <div className="flex items-start justify-between">
                               <div>
@@ -211,7 +204,6 @@ export default function CartPage() {
                 ))}
               </div>
 
-              {/* Order Summary */}
               <div className="lg:col-span-1">
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}

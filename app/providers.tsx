@@ -2,7 +2,8 @@
 'use client'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useCartStore } from '@/lib/stores/cartStore'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -16,6 +17,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
         },
       })
   )
+
+  
+  useEffect(() => {
+    useCartStore.persist.rehydrate()
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>
