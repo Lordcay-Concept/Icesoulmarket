@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -222,6 +223,7 @@ export default function PaymentPage() {
           </Card>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )

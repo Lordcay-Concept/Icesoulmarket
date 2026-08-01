@@ -14,6 +14,7 @@ import { ProductPrice } from '@/components/product/ProductPrice'
 import { ReviewForm } from '@/components/product/ReviewForm'
 import { ReviewList } from '@/components/product/ReviewList'
 import { ProductGallery } from '@/components/product/ProductGallery'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { Product } from '@/types/product.types'
 import { createClient } from '@/lib/supabase/server'
 
@@ -192,6 +193,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             <div className="flex flex-col gap-3 pt-4">
               <AddToCartButton product={product} />
             </div>
+
+            <WhatsAppButton
+              variant="inline"
+              message={`Hi! I'm interested in "${product.name}" (€${product.price}). Can you tell me more?`}
+            />
             
             <div className="grid grid-cols-3 gap-4 pt-4">
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-black-light">
@@ -251,6 +257,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </div>
         )}
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )

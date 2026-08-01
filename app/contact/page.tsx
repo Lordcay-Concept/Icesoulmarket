@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -268,6 +269,7 @@ export default function ContactPage() {
           </div>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )

@@ -1,6 +1,7 @@
 // components/shared/Footer/index.tsx
 import Link from 'next/link'
 import { Gamepad2, Sparkles, Mail } from 'lucide-react'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
@@ -61,6 +62,9 @@ export function Footer() {
                 <TikTokIcon />
                 <span className="text-sm">Follow us on TikTok</span>
               </a>
+            </div>
+            <div className="pt-2">
+            <WhatsAppButton variant="inline" />
             </div>
           </div>
         </div>

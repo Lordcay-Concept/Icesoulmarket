@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/hooks/useAuth'
 import { DatabaseService } from '@/lib/services/database.service'
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -40,6 +41,7 @@ interface Order {
   }[]
 }
 
+// In account/orders/page.tsx, replace getStatusConfig with this:
 const getStatusConfig = (status: OrderStatus) => {
   switch (status) {
     case 'payment_pending':
@@ -231,6 +233,7 @@ export default function OrdersPage() {
           </motion.div>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )

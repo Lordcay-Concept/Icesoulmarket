@@ -1,6 +1,7 @@
 // app/terms/page.tsx
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { FileText, Sparkles } from 'lucide-react'
 
 export default function TermsPage() {
@@ -117,6 +118,7 @@ export default function TermsPage() {
           </div>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )

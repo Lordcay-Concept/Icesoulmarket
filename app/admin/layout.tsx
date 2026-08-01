@@ -18,7 +18,8 @@ import {
   Gamepad2,
   Sparkles,
   CreditCard,
-  Lock
+  Lock,
+  Tag
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -39,6 +40,7 @@ const navItems: NavItem[] = [
   { href: '/admin/reviews', icon: Sparkles, label: 'Reviews' },
   { href: '/admin/change-password', icon: Lock, label: 'Change Password' },
   { href: '/admin/settings', icon: Settings, label: 'Settings' },
+  { href: '/admin/promo-codes', icon: Tag, label: 'Promo Codes' },
 ]
 
 export default function AdminLayout({
@@ -85,13 +87,10 @@ export default function AdminLayout({
             <Link href="/admin/dashboard" className="flex items-center gap-2">
               <Gamepad2 className="h-6 w-6 text-emerald-400 neon-glow" />
               <span className="text-xl font-bold">
-                <span className="text-white">COD</span>
+                <span className="text-white">IcesoulMarket</span>
                 <span className="text-emerald-400 neon-glow">Admin</span>
               </span>
             </Link>
-            <span className="hidden md:inline text-xs px-2 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">
-              Admin Panel
-            </span>
           </div>
 
           <div className="flex items-center gap-4">

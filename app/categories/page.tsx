@@ -1,6 +1,7 @@
 // app/categories/page.tsx
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { DatabaseService } from '@/lib/services/database.service'
 import Link from 'next/link'
 import { ArrowRight, Gamepad2, Sparkles } from 'lucide-react'
@@ -163,6 +164,7 @@ export default async function CategoriesPage() {
             </div>
           </div>
         </main>
+        <WhatsAppButton />
         <Footer />
       </>
     )

@@ -2,6 +2,7 @@
 import type { Metadata } from 'next'
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { ProductList } from '@/components/product/ProductList'
 import { ProductFiltersComponent } from '@/components/product/ProductFilters'
 import { Pagination } from '@/components/product/Pagination'
@@ -132,6 +133,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             </div>
           </div>
         </main>
+        <WhatsAppButton />
         <Footer />
       </>
     )

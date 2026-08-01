@@ -1,6 +1,7 @@
 // app/faq/page.tsx
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import {WhatsAppButton} from '@/components/shared/WhatsAppButton'
 import { HelpCircle, Gamepad2, Sparkles } from 'lucide-react'
 
 const faqs = [
@@ -84,6 +85,7 @@ export default function FAQPage() {
           </div>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )

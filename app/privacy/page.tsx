@@ -1,6 +1,7 @@
 // app/privacy/page.tsx
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { Shield, Sparkles } from 'lucide-react'
 
 export default function PrivacyPage() {
@@ -91,6 +92,7 @@ export default function PrivacyPage() {
           </div>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )

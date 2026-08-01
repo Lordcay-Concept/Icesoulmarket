@@ -7,6 +7,7 @@ import { useCartStore } from '@/lib/stores/cartStore'
 import { DatabaseService } from '@/lib/services/database.service'
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -25,10 +26,9 @@ export default function CheckoutPage() {
   const { formatPrice } = useCurrency()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isHydrated, setIsHydrated] = useState(false)
-
-  // Set to true the instant an order is placed, BEFORE the cart is cleared.
-  // Refs update synchronously (no re-render wait), so the empty-cart effect
-  // below sees this immediately and never fires a false "cart is empty" redirect.
+  const [promoCode, setPromoCode] = useState('')
+  const [appliedPromo, setAppliedPromo] = useState<any>(null)
+  const [promoError, setPromoError] = useState('')
   const orderPlacedRef = useRef(false)
 
   useEffect(() => {
@@ -47,8 +47,6 @@ export default function CheckoutPage() {
   }, [user, loading, router, isHydrated])
 
   useEffect(() => {
-    // Skip this check entirely if we just placed an order — the cart is
-    // SUPPOSED to be empty at that point, it's not a stale/invalid visit.
     if (orderPlacedRef.current) return
 
     if (isHydrated && items.length === 0 && !loading) {
@@ -61,6 +59,45 @@ export default function CheckoutPage() {
     }
   }, [items, router, isHydrated, loading])
 
+  // ✅ Calculate subtotal
+  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+
+  const handleApplyPromo = async () => {
+    setPromoError('')
+    if (!promoCode.trim()) return
+
+    const supabase = DatabaseService.getSupabaseClient()
+    const { data, error } = await supabase
+      .from('promo_codes')
+      .select('*')
+      .eq('code', promoCode.toUpperCase().trim())
+      .eq('is_active', true)
+      .maybeSingle()
+
+    if (error || !data) {
+      setPromoError('Invalid promo code')
+      setAppliedPromo(null)
+      return
+    }
+
+    if (data.expires_at && new Date(data.expires_at) < new Date()) {
+      setPromoError('This code has expired')
+      setAppliedPromo(null)
+      return
+    }
+
+    setAppliedPromo(data)
+    toast({
+      title: 'Promo code applied! 🎉',
+      description: `${data.discount_percentage}% discount applied!`,
+      variant: 'success',
+    })
+  }
+
+  // ✅ Calculate discount and final total
+  const discountAmount = appliedPromo ? (subtotal * appliedPromo.discount_percentage) / 100 : 0
+  const finalTotal = subtotal - discountAmount
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -72,7 +109,7 @@ export default function CheckoutPage() {
       const orderData = {
         order_number: orderNumber,
         user_id: user?.id,
-        total_amount: total,
+        total_amount: finalTotal,
         status: 'payment_pending',
         payment_method: 'bank_transfer',
         shipping_address: {
@@ -100,12 +137,22 @@ export default function CheckoutPage() {
       await DatabaseService.createPayment({
         order_id: order.id,
         user_id: user?.id,
-        amount: total,
+        amount: finalTotal,
         status: 'pending',
       })
 
-      // Mark the order as placed BEFORE clearing the cart, so the
-      // empty-cart-guard effect above knows to skip its redirect.
+      // ✅ Save promo code usage if applied
+      if (appliedPromo) {
+        const commissionAmount = (subtotal * (appliedPromo.commission_percentage || 0)) / 100
+        await supabase.from('promo_code_usages').insert({
+          promo_code_id: appliedPromo.id,
+          order_id: order.id,
+          order_total: subtotal,
+          discount_amount: discountAmount,
+          commission_amount: commissionAmount,
+        })
+      }
+
       orderPlacedRef.current = true
 
       await DatabaseService.clearCart(user?.id!)
@@ -147,24 +194,23 @@ export default function CheckoutPage() {
     return null
   }
 
-  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-
   return (
     <>
       <Navbar />
       <main className="container mx-auto px-4 py-24">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold text-white mb-8">
-            <span className="text-gaming-green">Checkout</span>
+            <span className="text-emerald-400 neon-glow">Checkout</span>
           </h1>
 
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-6">
-                <Card className="gaming-card">
+                {/* Contact Information */}
+                <Card className="glass border-emerald-400/20 rounded-2xl">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
-                      <User className="h-5 w-5 text-gaming-green" />
+                      <User className="h-5 w-5 text-emerald-400" />
                       Contact Information
                     </CardTitle>
                   </CardHeader>
@@ -172,13 +218,13 @@ export default function CheckoutPage() {
                     <div className="space-y-2">
                       <Label htmlFor="fullName" className="text-gray-300">Full Name</Label>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
                         <Input 
                           id="fullName" 
                           name="fullName"
                           placeholder="John Doe" 
                           defaultValue={user?.user_metadata?.full_name || ''}
-                          className="pl-9 bg-black-light border-gaming-green/20 focus:border-gaming-green"
+                          className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
                           required
                         />
                       </div>
@@ -186,19 +232,19 @@ export default function CheckoutPage() {
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-gray-300">Email Address</Label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
                         <Input 
                           id="email" 
                           name="email"
                           type="email" 
                           placeholder="john@example.com"
                           defaultValue={user?.email || ''}
-                          className="pl-9 bg-black-light border-gaming-green/20 focus:border-gaming-green"
+                          className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
                           required
                         />
                       </div>
                     </div>
-                    <div className="bg-gaming-green/5 border border-gaming-green/20 rounded-lg p-3">
+                    <div className="bg-emerald-400/5 border border-emerald-400/20 rounded-lg p-3">
                       <p className="text-xs text-gray-400">
                         📧 Your order details and account information will be sent to this email.
                       </p>
@@ -206,16 +252,17 @@ export default function CheckoutPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="gaming-card">
+                {/* Payment Information */}
+                <Card className="glass border-emerald-400/20 rounded-2xl">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
-                      <Lock className="h-5 w-5 text-gaming-green" />
+                      <Lock className="h-5 w-5 text-emerald-400" />
                       Payment Information
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="bg-gaming-green/5 border border-gaming-green/20 rounded-lg p-4">
-                      <div className="flex items-center gap-2 text-gaming-green">
+                    <div className="bg-emerald-400/5 border border-emerald-400/20 rounded-lg p-4">
+                      <div className="flex items-center gap-2 text-emerald-400">
                         <Shield className="h-5 w-5" />
                         <span className="font-semibold">Secure Bank Transfer</span>
                       </div>
@@ -230,15 +277,16 @@ export default function CheckoutPage() {
                         id="notes" 
                         name="notes"
                         placeholder="Any special instructions..." 
-                        className="bg-black-light border-gaming-green/20 focus:border-gaming-green"
+                        className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
                       />
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
+              {/* Order Summary */}
               <div className="lg:col-span-1">
-                <Card className="gaming-card sticky top-24">
+                <Card className="glass border-emerald-400/20 rounded-2xl sticky top-24">
                   <CardHeader>
                     <CardTitle className="text-white">Order Summary</CardTitle>
                   </CardHeader>
@@ -256,20 +304,58 @@ export default function CheckoutPage() {
                       ))}
                     </div>
                     
-                    <Separator className="bg-gaming-green/20" />
+                    <Separator className="bg-emerald-400/20" />
                     
                     <div className="space-y-2">
                       <div className="flex justify-between text-gray-400">
                         <span>Subtotal</span>
-                        <span>{formatPrice(subtotal)}</span>
+                        <span className="text-white">{formatPrice(subtotal)}</span>
                       </div>
+                      
+                      {appliedPromo && (
+                        <div className="flex justify-between text-emerald-400">
+                          <span>Discount ({appliedPromo.discount_percentage}%)</span>
+                          <span>-{formatPrice(discountAmount)}</span>
+                        </div>
+                      )}
                     </div>
                     
-                    <Separator className="bg-gaming-green/20" />
+                    <Separator className="bg-emerald-400/20" />
                     
                     <div className="flex justify-between text-lg font-bold text-white">
-                      <span>Total</span>
-                      <span className="text-gaming-green">{formatPrice(subtotal)}</span>
+                    <span>Total</span>
+                    <span className="text-emerald-400 neon-glow" data-testid="checkout-total">
+                      {formatPrice(finalTotal)}
+                    </span>
+                  </div>
+
+                    {/* ✅ Promo Code Section - Inside Order Summary */}
+                    <div className="pt-2">
+                      <Label className="text-sm text-gray-400 mb-1 block">Promo Code</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value)}
+                          placeholder="Enter code"
+                          className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                          disabled={!!appliedPromo}
+                        />
+                        <Button 
+                          type="button" 
+                          onClick={handleApplyPromo} 
+                          disabled={!!appliedPromo} 
+                          variant="outline" 
+                          className="border-emerald-400/30 text-emerald-400 hover:bg-emerald-400/10"
+                        >
+                          Apply
+                        </Button>
+                      </div>
+                      {promoError && <p className="text-sm text-red-400 mt-1">{promoError}</p>}
+                      {appliedPromo && (
+                        <p className="text-sm text-emerald-400 mt-1">
+                          ✓ {appliedPromo.discount_percentage}% discount applied
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-2 text-xs text-gray-400">
@@ -280,7 +366,7 @@ export default function CheckoutPage() {
                   <CardFooter className="flex flex-col gap-3">
                     <Button 
                       type="submit" 
-                      className="w-full bg-gaming-green text-black hover:bg-gaming-green/80 text-lg py-6"
+                      className="w-full gaming-btn text-lg py-6"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -296,7 +382,7 @@ export default function CheckoutPage() {
                       )}
                     </Button>
                     <Link href="/cart" className="w-full">
-                      <Button variant="outline" className="w-full border-gaming-green/30 text-white hover:bg-gaming-green/10">
+                      <Button variant="outline" className="w-full border-emerald-400/30 text-white hover:bg-emerald-400/10">
                         Back to Cart
                       </Button>
                     </Link>
@@ -307,6 +393,7 @@ export default function CheckoutPage() {
           </form>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )

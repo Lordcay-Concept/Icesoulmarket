@@ -4,6 +4,7 @@
 import { useCartStore } from '@/lib/stores/cartStore'
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
+import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
@@ -255,6 +256,7 @@ export default function CartPage() {
           </motion.div>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   )
