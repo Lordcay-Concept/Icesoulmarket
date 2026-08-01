@@ -3,7 +3,7 @@
 
 import { MessageCircle } from 'lucide-react'
 
-const WHATSAPP_NUMBER = '491767457435' // your number from contact page, no + or spaces
+const WHATSAPP_NUMBER = '4917670457435'
 const DEFAULT_MESSAGE = 'Hi! I have a question about a product on IcesoulMarket.'
 
 interface WhatsAppButtonProps {
