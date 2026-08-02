@@ -35,13 +35,29 @@ interface CartStore {
   handleLogout: () => void
   setHasHydrated: (state: boolean) => void
   setIsSyncing: (state: boolean) => void
-  resetSyncState: () => void // ✅ NEW - Force reset
+  resetSyncState: () => void
 }
 
 const recalculate = (items: CartItem[]) => ({
   total: items.reduce((sum, i) => sum + i.price * i.quantity, 0),
   itemCount: items.reduce((sum, i) => sum + i.quantity, 0),
 })
+
+// ✅ Track pending sync operations
+let pendingSyncOperations: Promise<any>[] = []
+
+function trackSync<T>(promise: Promise<T>): Promise<T> {
+  pendingSyncOperations.push(promise)
+  promise.finally(() => {
+    pendingSyncOperations = pendingSyncOperations.filter((p) => p !== promise)
+  })
+  return promise
+}
+
+// ✅ Export this function so useAuth can import it
+export async function flushPendingCartSync(): Promise<void> {
+  await Promise.allSettled(pendingSyncOperations)
+}
 
 export const useCartStore = create<CartStore>()(
   persist(
@@ -73,7 +89,7 @@ export const useCartStore = create<CartStore>()(
 
         const userId = get().userId
         if (userId) {
-          syncAddOrUpdate(userId, item.product_id, newQuantity)
+          trackSync(syncAddOrUpdate(userId, item.product_id, newQuantity))
         }
       },
 
@@ -85,7 +101,7 @@ export const useCartStore = create<CartStore>()(
 
         const userId = get().userId
         if (userId && itemToRemove) {
-          syncRemove(userId, itemToRemove.product_id)
+          trackSync(syncRemove(userId, itemToRemove.product_id))
         }
       },
 
@@ -100,7 +116,7 @@ export const useCartStore = create<CartStore>()(
         const userId = get().userId
         const updatedItem = items.find((i) => i.id === id)
         if (userId && updatedItem) {
-          syncAddOrUpdate(userId, updatedItem.product_id, quantity)
+          trackSync(syncAddOrUpdate(userId, updatedItem.product_id, quantity))
         }
       },
 
@@ -109,7 +125,7 @@ export const useCartStore = create<CartStore>()(
 
         const userId = get().userId
         if (userId) {
-          syncClear(userId)
+          trackSync(syncClear(userId))
         }
       },
 
@@ -125,15 +141,12 @@ export const useCartStore = create<CartStore>()(
         set({ syncedUserId: null, isSyncing: false })
       },
 
-      // ✅ COMPLETELY REWRITTEN - CLEAN MERGE WITHOUT DUPLICATION
       loadUserCart: async (userId: string) => {
-        // ✅ Prevent multiple simultaneous syncs
         if (get().isSyncing) {
           console.log('⏭️ Cart sync already in progress, skipping...')
           return
         }
 
-        // ✅ If already synced with THIS user, skip entirely
         if (get().syncedUserId === userId && get().userId === userId) {
           console.log('⏭️ Already synced with user:', userId)
           return
@@ -144,9 +157,8 @@ export const useCartStore = create<CartStore>()(
 
         try {
           const supabase = createClient()
-          const currentItems = get().items // Guest items
+          const currentItems = get().items
 
-          // ✅ STEP 1: Fetch user's cart from database
           const { data, error } = await supabase
             .from('cart_items')
             .select('*, product:products(*)')
@@ -158,7 +170,6 @@ export const useCartStore = create<CartStore>()(
             return
           }
 
-          // ✅ STEP 2: Build user items array
           const userItems: CartItem[] = (data || [])
             .filter((row: any) => row.product)
             .map((row: any) => ({
@@ -174,16 +185,13 @@ export const useCartStore = create<CartStore>()(
           console.log('📦 User items from DB:', userItems.length)
           console.log('📦 Current guest items:', currentItems.length)
 
-          // ✅ STEP 3: Determine what to do
           if (currentItems.length === 0 && userItems.length === 0) {
-            // ✅ Both empty - just set user
             set({ userId, syncedUserId: userId, isSyncing: false })
             console.log('✅ Both carts empty, just set user')
             return
           }
 
           if (currentItems.length === 0 && userItems.length > 0) {
-            // ✅ Only user has items - load them
             set({
               items: userItems,
               userId,
@@ -196,40 +204,35 @@ export const useCartStore = create<CartStore>()(
           }
 
           if (currentItems.length > 0 && userItems.length === 0) {
-            // ✅ Only guest has items - save them to DB
             for (const item of currentItems) {
               await syncAddOrUpdate(userId, item.product_id, item.quantity, false)
             }
             set({
+              items: currentItems,
               userId,
               syncedUserId: userId,
+              ...recalculate(currentItems),
               isSyncing: false
             })
             console.log('✅ Saved guest items to DB:', currentItems.length, 'items')
             return
           }
 
-          // ✅ STEP 4: BOTH have items - MERGE (no duplication)
           if (currentItems.length > 0 && userItems.length > 0) {
             console.log('🔄 Merging carts...')
 
-            // ✅ Create a map for merged items
             const mergedMap = new Map<string, CartItem>()
 
-            // ✅ Add user items first
             userItems.forEach(item => {
               mergedMap.set(item.product_id, { ...item })
             })
 
-            // ✅ Add/merge guest items
             currentItems.forEach(guestItem => {
               if (mergedMap.has(guestItem.product_id)) {
-                // ✅ Same product - ADD quantities
                 const existing = mergedMap.get(guestItem.product_id)!
                 existing.quantity += guestItem.quantity
                 console.log(`  ➕ Merged ${guestItem.name}: +${guestItem.quantity} (now ${existing.quantity})`)
               } else {
-                // ✅ New product - ADD it
                 mergedMap.set(guestItem.product_id, { ...guestItem })
                 console.log(`  ➕ Added ${guestItem.name}: ${guestItem.quantity}`)
               }
@@ -238,17 +241,14 @@ export const useCartStore = create<CartStore>()(
             const mergedItems = Array.from(mergedMap.values())
             console.log('📦 Merged items:', mergedItems.length)
 
-            // ✅ STEP 5: CLEAR the user's cart in DB first
             await syncClear(userId)
             console.log('🗑️ Cleared user cart in DB')
 
-            // ✅ STEP 6: Insert all merged items
             for (const item of mergedItems) {
               await syncAddOrUpdate(userId, item.product_id, item.quantity, false)
               console.log(`  💾 Saved ${item.name}: ${item.quantity}`)
             }
 
-            // ✅ STEP 7: Set the store with merged items
             set({
               items: mergedItems,
               userId,
@@ -317,12 +317,14 @@ async function syncAddOrUpdate(
         .from('cart_items')
         .update({ quantity: finalQuantity, updated_at: new Date().toISOString() })
         .eq('id', existing.id)
+      console.log(`  ✅ Updated ${productId}: ${finalQuantity}`)
     } else {
       await supabase.from('cart_items').insert({
         user_id: userId,
         product_id: productId,
         quantity,
       })
+      console.log(`  ✅ Inserted ${productId}: ${quantity}`)
     }
   } catch (error) {
     console.error('Error syncing cart item:', error)
@@ -337,6 +339,7 @@ async function syncRemove(userId: string, productId: string) {
       .delete()
       .eq('user_id', userId)
       .eq('product_id', productId)
+    console.log(`  🗑️ Removed ${productId}`)
   } catch (error) {
     console.error('Error removing cart item:', error)
   }
@@ -346,6 +349,7 @@ async function syncClear(userId: string) {
   try {
     const supabase = createClient()
     await supabase.from('cart_items').delete().eq('user_id', userId)
+    console.log(`  🗑️ Cleared all cart items for user ${userId}`)
   } catch (error) {
     console.error('Error clearing cart:', error)
   }

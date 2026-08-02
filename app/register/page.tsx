@@ -65,7 +65,7 @@ export default function RegisterPage() {
       await signUp(formData.email, formData.password, formData.username)
       toast({
         title: 'Account Created! 🎮',
-        description: 'Welcome to COD Shop. Please check your email to verify your account.',
+        description: 'Welcome to COD Shop.',
         variant: 'success',
       })
       router.push('/login')

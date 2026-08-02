@@ -66,6 +66,11 @@ export default function AdminLayout({
     }
   }, [user, loading, isAdmin, router, isHydrated])
 
+  const handleSignOut = async () => {
+    await signOut()
+    router.push('/')
+  }
+
   if (!isHydrated || loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -112,11 +117,12 @@ export default function AdminLayout({
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
+            {/* ✅ Desktop logout button - visible on md+ */}
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-400 hover:text-red-400"
-              onClick={signOut}
+              className="hidden md:flex text-gray-400 hover:text-red-400"
+              onClick={handleSignOut}
             >
               <LogOut className="h-5 w-5" />
             </Button>
@@ -125,11 +131,12 @@ export default function AdminLayout({
       </nav>
 
       <div className="flex pt-16">
-        {/* Sidebar */}
-        <aside className={`fixed z-40 h-[calc(100vh-4rem)] w-64 glass border-r border-emerald-400/10 transition-transform ${
+        {/* ✅ Sidebar - Scrollable with Logout at bottom */}
+        <aside className={`fixed z-40 h-[calc(100vh-4rem)] w-64 glass border-r border-emerald-400/10 transition-transform flex flex-col ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0`}>
-          <nav className="p-4 space-y-1">
+          {/* ✅ Scrollable nav area */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-1">
             {navItems.map((item) => {
               const IconComponent = item.icon 
               return (
@@ -144,7 +151,18 @@ export default function AdminLayout({
                 </Link>
               )
             })}
-          </nav>
+          </div>
+
+          {/* ✅ Logout button - Fixed at bottom of sidebar */}
+          <div className="border-t border-emerald-400/10 p-4">
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-all"
+            >
+              <LogOut className="h-5 w-5" />
+              <span>Logout</span>
+            </button>
+          </div>
         </aside>
 
         {/* Main Content */}

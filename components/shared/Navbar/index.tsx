@@ -48,15 +48,14 @@ export function Navbar() {
   const cartCount = isHydrated ? items.reduce((acc: number, item) => acc + item.quantity, 0) : 0
 
   const getDisplayName = (profile: any) => {
-  if (profile?.username) return profile.username
-  // Fallback
-  return 'User'
-}
+    if (profile?.username) return profile.username
+    return 'User'
+  }
 
-const getAvatarFallback = (profile: any) => {
-  const name = getDisplayName(profile)
-  return name[0]?.toUpperCase() || 'U'
-}
+  const getAvatarFallback = (profile: any) => {
+    const name = getDisplayName(profile)
+    return name[0]?.toUpperCase() || 'U'
+  }
 
   const handleSignOut = async () => {
     await signOut()
@@ -107,7 +106,7 @@ const getAvatarFallback = (profile: any) => {
           ))}
         </div>
 
-        {/* Actions */}
+        {/* Actions - Desktop */}
         <div className="flex items-center gap-3">
           {/* Cart */}
           <Link href="/cart" className="relative group">
@@ -121,26 +120,26 @@ const getAvatarFallback = (profile: any) => {
             </Button>
           </Link>
 
-          {/* ✅ User Dropdown Menu */}
+          {/* User Dropdown Menu - Desktop only */}
           {user ? (
             <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
-            <div className="flex items-center gap-2 rounded-full hover:bg-emerald-400/10 px-3 py-1.5 cursor-pointer transition-all hover:scale-105">
-              <Avatar className="h-8 w-8 border border-emerald-400/30">
-                <AvatarImage src={profile?.avatar_url || ''} />
-                <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-black font-bold">
-                  {getAvatarFallback(profile)}
-                </AvatarFallback>
-              </Avatar>
-              <span className="hidden md:inline text-sm text-gray-300 font-medium">
-                {getDisplayName(profile)}
-              </span>
-              <ChevronDown className={cn(
-                "h-4 w-4 text-gray-400 hidden md:block transition-transform duration-200",
-                isDropdownOpen && "rotate-180"
-              )} />
-            </div>
-          </DropdownMenuTrigger>
+                <div className="hidden md:flex items-center gap-2 rounded-full hover:bg-emerald-400/10 px-3 py-1.5 cursor-pointer transition-all hover:scale-105">
+                  <Avatar className="h-8 w-8 border border-emerald-400/30">
+                    <AvatarImage src={profile?.avatar_url || ''} />
+                    <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-black font-bold">
+                      {getAvatarFallback(profile)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm text-gray-300 font-medium">
+                    {getDisplayName(profile)}
+                  </span>
+                  <ChevronDown className={cn(
+                    "h-4 w-4 text-gray-400 transition-transform duration-200",
+                    isDropdownOpen && "rotate-180"
+                  )} />
+                </div>
+              </DropdownMenuTrigger>
               <DropdownMenuContent className="glass border-emerald-400/20 w-56" align="end" sideOffset={8}>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
@@ -197,18 +196,18 @@ const getAvatarFallback = (profile: any) => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href="/login">
+            <Link href="/login" className="hidden md:block">
               <Button className="gaming-btn text-sm px-4 py-2">
                 Login
               </Button>
             </Link>
           )}
 
-          {/* Mobile Menu Button */}
+          {/* ✅ Mobile Menu Button - With right padding to prevent cut-off */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden text-gray-400 hover:text-white"
+            className="md:hidden text-gray-400 hover:text-white pr-1 mr-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -216,7 +215,7 @@ const getAvatarFallback = (profile: any) => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ✅ Mobile Menu - Login button now inside */}
       {isMobileMenuOpen && (
         <div className="md:hidden glass border-t border-emerald-400/10">
           <div className="container mx-auto px-4 py-4 flex flex-col gap-2">
@@ -236,7 +235,7 @@ const getAvatarFallback = (profile: any) => {
               </Link>
             ))}
             
-            {user && (
+            {user ? (
               <>
                 <Link
                   href="/account"
@@ -270,6 +269,23 @@ const getAvatarFallback = (profile: any) => {
                 >
                   Logout
                 </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-3 rounded-lg text-sm font-medium text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Register
+                </Link>
               </>
             )}
           </div>

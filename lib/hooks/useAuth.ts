@@ -1,11 +1,10 @@
 // lib/hooks/useAuth.ts
 'use client'
 
-import { useEffect, useState, useRef  } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { type User } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
-import { useCartStore } from '@/lib/stores/cartStore'
-import { ensureCartHydrated } from '@/lib/stores/cartStore'
+import { useCartStore, ensureCartHydrated, flushPendingCartSync } from '@/lib/stores/cartStore'
 import { useRouter } from 'next/navigation'
 
 interface UserProfile {
@@ -41,7 +40,7 @@ export function useAuth(): UseAuthReturn {
   const fetchProfile = async (userId: string) => {
     try {
       console.log('🔍 Fetching profile for user:', userId)
-      
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -55,10 +54,9 @@ export function useAuth(): UseAuthReturn {
 
       if (!data) {
         console.log('⚠️ No profile found, creating one...')
-        // Try to create profile
         const { data: userData } = await supabase.auth.getUser()
         const email = userData?.user?.email || ''
-        
+
         const { error: insertError } = await supabase
           .from('profiles')
           .insert({
@@ -70,19 +68,18 @@ export function useAuth(): UseAuthReturn {
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           })
-        
+
         if (insertError) {
           console.error('❌ Error creating profile:', insertError.message)
           return null
         }
-        
-        // Fetch again
+
         const { data: newData } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', userId)
           .maybeSingle()
-          
+
         return newData as UserProfile | null
       }
 
@@ -97,21 +94,21 @@ export function useAuth(): UseAuthReturn {
     const getUser = async () => {
       try {
         setLoading(true)
-        
+
         const { data: { user } } = await supabase.auth.getUser()
         setUser(user)
-        
-        if (user) {
-        const profileData = await fetchProfile(user.id)
-        setProfile(profileData)
-        setIsAdmin(profileData?.is_admin || false)
 
-        if (lastSyncedUserId.current !== user.id) {
-          lastSyncedUserId.current = user.id
-          await ensureCartHydrated() 
-          await useCartStore.getState().loadUserCart(user.id)
+        if (user) {
+          const profileData = await fetchProfile(user.id)
+          setProfile(profileData)
+          setIsAdmin(profileData?.is_admin || false)
+
+          if (lastSyncedUserId.current !== user.id) {
+            lastSyncedUserId.current = user.id
+            await ensureCartHydrated()
+            await useCartStore.getState().loadUserCart(user.id)
+          }
         }
-      }
       } catch (error) {
         console.error('Error getting user:', error)
       } finally {
@@ -122,27 +119,28 @@ export function useAuth(): UseAuthReturn {
     getUser()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-  async (_event, session) => {
-    setUser(session?.user ?? null)
+      async (_event, session) => {
+        setUser(session?.user ?? null)
 
-    if (session?.user) {
-      const profileData = await fetchProfile(session.user.id)
-      setProfile(profileData)
-      setIsAdmin(profileData?.is_admin || false)
+        if (session?.user) {
+          const profileData = await fetchProfile(session.user.id)
+          setProfile(profileData)
+          setIsAdmin(profileData?.is_admin || false)
 
-      if (lastSyncedUserId.current !== session.user.id) {
-        lastSyncedUserId.current = session.user.id
-        useCartStore.getState().loadUserCart(session.user.id)
+          if (lastSyncedUserId.current !== session.user.id) {
+            lastSyncedUserId.current = session.user.id
+            await ensureCartHydrated()
+            await useCartStore.getState().loadUserCart(session.user.id)
+          }
+        } else {
+          lastSyncedUserId.current = null
+          setProfile(null)
+          setIsAdmin(false)
+        }
+
+        setLoading(false)
       }
-    } else {
-      lastSyncedUserId.current = null
-      setProfile(null)
-      setIsAdmin(false)
-    }
-
-    setLoading(false)
-  }
-)
+    )
 
     return () => subscription.unsubscribe()
   }, [supabase])
@@ -170,11 +168,13 @@ export function useAuth(): UseAuthReturn {
   }
 
   const signOut = async () => {
-  await supabase.auth.signOut()
-  lastSyncedUserId.current = null
-  useCartStore.getState().handleLogout()
-  router.push('/')
-}
+    // ✅ Wait for any in-flight cart operations to complete
+    await flushPendingCartSync()
+    await supabase.auth.signOut()
+    lastSyncedUserId.current = null
+    useCartStore.getState().handleLogout()
+    router.push('/')
+  }
 
   return { user, profile, loading, isAdmin, signIn, signUp, signOut }
 }
