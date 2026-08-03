@@ -12,6 +12,7 @@ export interface CartItem {
   image: string
   platform?: string
   maxStock?: number
+  category_id?: string | null
 }
 
 interface CartStore {
@@ -180,6 +181,7 @@ export const useCartStore = create<CartStore>()(
               quantity: row.quantity,
               image: row.product.images?.[0] || '/images/placeholder.jpg',
               platform: row.product.platform?.[0],
+              category_id: row.product.category_id,
             }))
 
           console.log('📦 User items from DB:', userItems.length)

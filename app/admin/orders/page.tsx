@@ -6,6 +6,8 @@ import { DatabaseService } from '@/lib/services/database.service'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
 import { useCurrency } from '@/lib/hooks/useCurrency'
 import { 
   ShoppingBag, 
@@ -13,14 +15,22 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  PlayCircle
+  PlayCircle,
+  ChevronDown,
+  ChevronUp,
+  User,
+  Package,
+  CreditCard,
+  Calendar
 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
   const { formatPrice } = useCurrency()
 
   useEffect(() => {
@@ -39,41 +49,41 @@ export default function AdminOrdersPage() {
     }
   }
 
-const updateOrderStatus = async (orderId: string, status: string) => {
-  if (status === 'cancelled') {
-    if (!confirm('Are you sure you want to cancel this order? This cannot be undone.')) {
-      return
+  const updateOrderStatus = async (orderId: string, status: string) => {
+    if (status === 'cancelled') {
+      if (!confirm('Are you sure you want to cancel this order? This cannot be undone.')) {
+        return
+      }
+    }
+    try {
+      await DatabaseService.updateOrderStatus(orderId, status)
+      toast({
+        title: 'Success!',
+        description: `Order status updated`,
+        variant: 'success',
+      })
+      loadOrders()
+    } catch (error) {
+      console.error('Error updating order:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to update order',
+        variant: 'destructive',
+      })
     }
   }
-  try {
-    await DatabaseService.updateOrderStatus(orderId, status)
-    toast({
-      title: 'Success!',
-      description: `Order status updated`,
-      variant: 'success',
-    })
-    loadOrders()
-  } catch (error) {
-    console.error('Error updating order:', error)
-    toast({
-      title: 'Error',
-      description: 'Failed to update order',
-      variant: 'destructive',
-    })
-  }
-}
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-emerald-400/20 text-emerald-400'
-      case 'processing': return 'bg-blue-400/20 text-blue-400'
-      case 'payment_approved': return 'bg-emerald-400/20 text-emerald-400'
-      case 'pending_verification': return 'bg-yellow-400/20 text-yellow-400'
-      case 'payment_pending': return 'bg-gray-400/20 text-gray-400'
-      case 'payment_rejected': return 'bg-red-400/20 text-red-400'
-      case 'cancelled': return 'bg-red-400/20 text-red-400'
-      case 'refunded': return 'bg-purple-400/20 text-purple-400'
-      default: return 'bg-gray-400/20 text-gray-400'
+      case 'completed': return 'bg-emerald-400/20 text-emerald-400 border-emerald-500/30'
+      case 'processing': return 'bg-blue-400/20 text-blue-400 border-blue-500/30'
+      case 'payment_approved': return 'bg-emerald-400/20 text-emerald-400 border-emerald-500/30'
+      case 'pending_verification': return 'bg-yellow-400/20 text-yellow-400 border-yellow-500/30'
+      case 'payment_pending': return 'bg-gray-400/20 text-gray-400 border-gray-500/30'
+      case 'payment_rejected': return 'bg-red-400/20 text-red-400 border-red-500/30'
+      case 'cancelled': return 'bg-red-400/20 text-red-400 border-red-500/30'
+      case 'refunded': return 'bg-purple-400/20 text-purple-400 border-purple-500/30'
+      default: return 'bg-gray-400/20 text-gray-400 border-gray-500/30'
     }
   }
 
@@ -89,6 +99,10 @@ const updateOrderStatus = async (orderId: string, status: string) => {
       case 'refunded': return 'Refunded'
       default: return status
     }
+  }
+
+  const toggleOrderExpand = (orderId: string) => {
+    setExpandedOrder(expandedOrder === orderId ? null : orderId)
   }
 
   const filteredOrders = orders.filter(o =>
@@ -125,66 +139,183 @@ const updateOrderStatus = async (orderId: string, status: string) => {
       </div>
 
       <div className="space-y-4">
-        {filteredOrders.map((order) => (
-          <Card key={order.id} className="glass border-emerald-400/10 rounded-2xl hover:border-emerald-400/30 transition-all">
-            <CardContent className="p-6">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <ShoppingBag className="h-5 w-5 text-emerald-400" />
-                    <span className="text-white font-medium">#{order.order_number}</span>
+        {filteredOrders.map((order) => {
+          const isExpanded = expandedOrder === order.id
+          const statusColor = getStatusColor(order.status)
+          const statusLabel = getStatusLabel(order.status)
+          
+          return (
+            <Card key={order.id} className="glass border-emerald-400/10 rounded-2xl hover:border-emerald-400/30 transition-all overflow-hidden">
+              {/* Order Header */}
+              <div 
+                className="p-5 cursor-pointer hover:bg-emerald-400/5 transition-colors"
+                onClick={() => toggleOrderExpand(order.id)}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span className="text-white font-bold text-base sm:text-lg">
+                        #{order.order_number}
+                      </span>
+                      <Badge className={`${statusColor} border px-2.5 py-0.5 text-xs font-medium`}>
+                        {statusLabel}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-3 mt-1.5 text-xs sm:text-sm text-gray-400">
+                      <span>
+                        {new Date(order.created_at).toLocaleDateString()} at{' '}
+                        {new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      <span className="text-gray-600">•</span>
+                      <span>
+                        {order.order_items?.length || 0} items
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-400 mt-1">
-                    {new Date(order.created_at).toLocaleDateString()} at{' '}
-                    {new Date(order.created_at).toLocaleTimeString()}
-                  </p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-emerald-400 font-bold">
-                    {formatPrice(order.total_amount)}
-                  </span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                    {getStatusLabel(order.status)}
-                  </span>
-                  <div className="flex gap-2">
-                    {/* Before payment is confirmed, admin can only cancel — approval happens on the Payments page */}
-                    {(order.status === 'payment_pending' || order.status === 'pending_verification') && (
-                      <Button
-                        size="sm"
-                        className="bg-red-400/10 text-red-400 hover:bg-red-400/20"
-                        onClick={() => updateOrderStatus(order.id, 'cancelled')}
-                      >
-                        <XCircle className="h-3 w-3 mr-1" />
-                        Cancel
-                      </Button>
-                    )}
-                    {/* Payment approved on Payments page → admin now fulfills the order */}
-                    {order.status === 'payment_approved' && (
-                      <Button
-                        size="sm"
-                        className="bg-blue-400/10 text-blue-400 hover:bg-blue-400/20"
-                        onClick={() => updateOrderStatus(order.id, 'processing')}
-                      >
-                        <PlayCircle className="h-3 w-3 mr-1" />
-                        Start Processing
-                      </Button>
-                    )}
-                    {order.status === 'processing' && (
-                      <Button
-                        size="sm"
-                        className="bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
-                        onClick={() => updateOrderStatus(order.id, 'completed')}
-                      >
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        Mark Completed
-                      </Button>
-                    )}
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <div className="text-sm text-gray-400">Total</div>
+                      <div className="text-lg font-bold text-emerald-400 neon-glow">
+                        {formatPrice(order.total_amount)}
+                      </div>
+                    </div>
+                    <button 
+                      className="p-1.5 rounded-full hover:bg-emerald-400/10 transition-colors text-gray-400 hover:text-white"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleOrderExpand(order.id)
+                      }}
+                    >
+                      {isExpanded ? (
+                        <ChevronUp className="h-5 w-5" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5" />
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+
+              {/* Order Details - Expandable */}
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="overflow-hidden"
+                  >
+                    <Separator className="bg-emerald-400/10" />
+                    <div className="p-5 space-y-4">
+                      {/* Customer Info */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                          <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                            <User className="h-4 w-4" />
+                            Customer Information
+                          </div>
+                          <p className="text-white font-medium">
+                            {order.shipping_address?.fullName || 'N/A'}
+                          </p>
+                          <p className="text-sm text-gray-400">
+                            {order.shipping_address?.email || order.user_id}
+                          </p>
+                        </div>
+                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                          <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                            <Calendar className="h-4 w-4" />
+                            Order Details
+                          </div>
+                          <p className="text-white">
+                            Order ID: <span className="text-sm text-gray-400">{order.id}</span>
+                          </p>
+                          <p className="text-white">
+                            Payment: <span className="text-sm text-gray-400">{order.payment_method || 'Bank Transfer'}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Items List */}
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                          <Package className="h-4 w-4" />
+                          Order Items
+                        </h4>
+                        <div className="space-y-2 bg-black/30 rounded-xl p-3">
+                          {order.order_items?.map((item: any, idx: number) => (
+                            <div key={idx} className="flex justify-between items-center text-sm py-1.5 border-b border-emerald-400/5 last:border-0">
+                              <div className="flex items-center gap-3">
+                                <span className="text-gray-300">
+                                  {item.product_name}
+                                </span>
+                                <span className="text-xs text-gray-500">× {item.quantity}</span>
+                              </div>
+                              <span className="text-white font-medium">
+                                {formatPrice(item.product_price * item.quantity)}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Order Summary */}
+                      <div className="bg-emerald-400/5 rounded-xl p-4 border border-emerald-400/10">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-400">Subtotal</span>
+                          <span className="text-white">{formatPrice(order.total_amount)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm mt-1">
+                          <span className="text-gray-400">Shipping</span>
+                          <span className="text-emerald-400">Free</span>
+                        </div>
+                        <Separator className="my-2 bg-emerald-400/10" />
+                        <div className="flex justify-between font-bold">
+                          <span className="text-white">Total</span>
+                          <span className="text-emerald-400 neon-glow">{formatPrice(order.total_amount)}</span>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {(order.status === 'payment_pending' || order.status === 'pending_verification') && (
+                          <Button
+                            size="sm"
+                            className="bg-red-400/10 text-red-400 hover:bg-red-400/20"
+                            onClick={() => updateOrderStatus(order.id, 'cancelled')}
+                          >
+                            <XCircle className="h-3 w-3 mr-1" />
+                            Cancel Order
+                          </Button>
+                        )}
+                        {order.status === 'payment_approved' && (
+                          <Button
+                            size="sm"
+                            className="bg-blue-400/10 text-blue-400 hover:bg-blue-400/20"
+                            onClick={() => updateOrderStatus(order.id, 'processing')}
+                          >
+                            <PlayCircle className="h-3 w-3 mr-1" />
+                            Start Processing
+                          </Button>
+                        )}
+                        {order.status === 'processing' && (
+                          <Button
+                            size="sm"
+                            className="bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
+                            onClick={() => updateOrderStatus(order.id, 'completed')}
+                          >
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Mark Completed
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Card>
+          )
+        })}
       </div>
 
       {filteredOrders.length === 0 && (

@@ -62,41 +62,58 @@ export default function CheckoutPage() {
   // ✅ Calculate subtotal
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
 
+  const eligibleItems = appliedPromo?.restricted_category_id
+    ? items.filter((item) => item.category_id === appliedPromo.restricted_category_id)
+    : items
+
+  const eligibleSubtotal = eligibleItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+  const discountAmount = appliedPromo ? (eligibleSubtotal * appliedPromo.discount_percentage) / 100 : 0
+  const finalTotal = subtotal - discountAmount
+
   const handleApplyPromo = async () => {
-    setPromoError('')
-    if (!promoCode.trim()) return
+  setPromoError('')
+  if (!promoCode.trim()) return
 
-    const supabase = DatabaseService.getSupabaseClient()
-    const { data, error } = await supabase
-      .from('promo_codes')
-      .select('*')
-      .eq('code', promoCode.toUpperCase().trim())
-      .eq('is_active', true)
-      .maybeSingle()
+  const supabase = DatabaseService.getSupabaseClient()
+  const { data, error } = await supabase
+    .from('promo_codes')
+    .select('*, restricted_category:categories!restricted_category_id(name)')
+    .eq('code', promoCode.toUpperCase().trim())
+    .eq('is_active', true)
+    .maybeSingle()
 
-    if (error || !data) {
-      setPromoError('Invalid promo code')
-      setAppliedPromo(null)
-      return
-    }
-
-    if (data.expires_at && new Date(data.expires_at) < new Date()) {
-      setPromoError('This code has expired')
-      setAppliedPromo(null)
-      return
-    }
-
-    setAppliedPromo(data)
-    toast({
-      title: 'Promo code applied! 🎉',
-      description: `${data.discount_percentage}% discount applied!`,
-      variant: 'success',
-    })
+  if (error || !data) {
+    setPromoError('Invalid promo code')
+    setAppliedPromo(null)
+    return
   }
 
-  // ✅ Calculate discount and final total
-  const discountAmount = appliedPromo ? (subtotal * appliedPromo.discount_percentage) / 100 : 0
-  const finalTotal = subtotal - discountAmount
+  if (data.expires_at && new Date(data.expires_at) < new Date()) {
+    setPromoError('This code has expired')
+    setAppliedPromo(null)
+    return
+  }
+
+  // Check that at least one cart item actually qualifies for a restricted code
+  if (data.restricted_category_id) {
+    const hasEligibleItem = items.some((item) => item.category_id === data.restricted_category_id)
+    if (!hasEligibleItem) {
+      setPromoError(`This code only applies to ${data.restricted_category?.name || 'certain'} products, which aren't in your cart`)
+      setAppliedPromo(null)
+      return
+    }
+  }
+
+  setAppliedPromo(data)
+  toast({
+    title: 'Promo code applied! 🎉',
+    description: data.restricted_category_id
+      ? `${data.discount_percentage}% off eligible items`
+      : `${data.discount_percentage}% discount applied!`,
+    variant: 'success',
+  })
+}
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -143,7 +160,7 @@ export default function CheckoutPage() {
 
       // ✅ Save promo code usage if applied
       if (appliedPromo) {
-        const commissionAmount = (subtotal * (appliedPromo.commission_percentage || 0)) / 100
+        const commissionAmount = (eligibleSubtotal * (appliedPromo.commission_percentage || 0)) / 100
         await supabase.from('promo_code_usages').insert({
           promo_code_id: appliedPromo.id,
           order_id: order.id,
@@ -292,17 +309,54 @@ export default function CheckoutPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2 max-h-60 overflow-y-auto">
-                      {items.map((item) => (
-                        <div key={item.id} className="flex justify-between text-sm">
-                          <span className="text-gray-300">
-                            {item.name} × {item.quantity}
-                          </span>
-                          <span className="text-white">
-                            {formatPrice(item.price * item.quantity)}
-                          </span>
+                    {items.map((item) => {
+                      const isEligible = appliedPromo && eligibleItems.some((e) => e.id === item.id)
+                      const itemOriginalTotal = item.price * item.quantity
+                      const itemDiscountedTotal = isEligible
+                        ? itemOriginalTotal - (itemOriginalTotal * appliedPromo.discount_percentage) / 100
+                        : itemOriginalTotal
+
+                      return (
+                        <div
+                          key={item.id}
+                          className={`text-sm rounded-lg transition-all ${
+                            isEligible
+                              ? 'bg-emerald-400/10 border border-emerald-400/30 p-2'
+                              : 'p-2'
+                          }`}
+                        >
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="text-gray-300 flex-1">
+                              {item.name} × {item.quantity}
+                            </span>
+                            <div className="text-right flex-shrink-0">
+                              {isEligible ? (
+                                <>
+                                  <span className="text-gray-500 line-through text-xs block">
+                                    {formatPrice(itemOriginalTotal)}
+                                  </span>
+                                  <span className="text-emerald-400 font-semibold">
+                                    {formatPrice(itemDiscountedTotal)}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="text-white">
+                                  {formatPrice(itemOriginalTotal)}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          {isEligible && (
+                            <div className="flex items-center gap-1 mt-1">
+                              <span className="text-[10px] font-medium bg-emerald-400/20 text-emerald-400 px-2 py-0.5 rounded-full">
+                                -{appliedPromo.discount_percentage}% applied
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      ))}
-                    </div>
+                      )
+                    })}
+                  </div>
                     
                     <Separator className="bg-emerald-400/20" />
                     
@@ -314,7 +368,10 @@ export default function CheckoutPage() {
                       
                       {appliedPromo && (
                         <div className="flex justify-between text-emerald-400">
-                          <span>Discount ({appliedPromo.discount_percentage}%)</span>
+                          <span>
+                            Discount ({appliedPromo.discount_percentage}%
+                            {appliedPromo.restricted_category_id ? ' on eligible items' : ''})
+                          </span>
                           <span>-{formatPrice(discountAmount)}</span>
                         </div>
                       )}

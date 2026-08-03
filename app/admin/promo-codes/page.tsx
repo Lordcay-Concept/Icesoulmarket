@@ -35,6 +35,7 @@ export default function AdminPromoCodesPage() {
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { formatPrice } = useCurrency()
+  const [categories, setCategories] = useState<any[]>([])
   const [formData, setFormData] = useState({
     code: '',
     partner_name: '',
@@ -42,12 +43,19 @@ export default function AdminPromoCodesPage() {
     discount_percentage: '',
     commission_percentage: '',
     expires_at: '',
+    restricted_category_id: '', 
   })
 
   useEffect(() => {
     loadData()
+    loadCategories()
   }, [])
 
+  
+  const loadCategories = async () => {
+  const data = await DatabaseService.getCategories()
+  setCategories(data)
+}
   const loadData = async () => {
     try {
       setLoading(true)
@@ -101,13 +109,14 @@ export default function AdminPromoCodesPage() {
         discount_percentage: parseFloat(formData.discount_percentage),
         commission_percentage: parseFloat(formData.commission_percentage),
         expires_at: formData.expires_at ? new Date(formData.expires_at).toISOString() : null,
+        restricted_category_id: formData.restricted_category_id || null,
       })
 
       if (error) throw error
 
       toast({ title: 'Success!', description: 'Promo code created', variant: 'success' })
       setIsModalOpen(false)
-      setFormData({ code: '', partner_name: '', partner_email: '', discount_percentage: '', commission_percentage: '', expires_at: '' })
+      setFormData({ code: '', partner_name: '', partner_email: '', discount_percentage: '', commission_percentage: '', expires_at: '', restricted_category_id: '' })
       loadData()
     } catch (error: any) {
       console.error('Error creating promo code:', error)
@@ -289,6 +298,19 @@ export default function AdminPromoCodesPage() {
                     required
                   />
                 </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Restrict to Category (optional)</Label>
+                <select
+                  value={formData.restricted_category_id}
+                  onChange={(e) => setFormData({ ...formData, restricted_category_id: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-emerald-400/20 focus:border-emerald-400 text-white"
+                >
+                  <option value="">All Products</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name} only</option>
+                  ))}
+                </select>
               </div>
               <div className="space-y-2">
                 <Label className="text-gray-300">Expiry Date (optional)</Label>

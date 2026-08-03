@@ -127,13 +127,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           <div className="space-y-6">
             <div>
               {product.category && (
-                <Badge className="mb-2 bg-gaming-green/20 text-gaming-green">
+                <Badge className="mb-2 bg-emerald-400/20 text-emerald-400">
                   {product.category.name}
                 </Badge>
               )}
               <h1 className="text-3xl font-bold text-white">{product.name}</h1>
               <div className="flex items-center gap-2 mt-2">
-                <div className="flex text-gaming-green">
+                <div className="flex text-emerald-400">
                   {[...Array(5)].map((_: unknown, index: number) => (
                     <Star
                       key={index}
@@ -166,7 +166,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               <h3 className="font-semibold text-white">Platforms:</h3>
               <div className="flex flex-wrap gap-2">
                 {product.platform.map((platform: string) => (
-                  <Badge key={platform} className="bg-black-light border-gaming-green/30">
+                  <Badge key={platform} className="bg-black-light border-emerald-400/30">
                     {platform}
                   </Badge>
                 ))}
@@ -179,7 +179,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 <ul className="space-y-1">
                   {productFeatures.map(([key, value]: FeatureEntry) => (
                     <li key={key} className="flex items-center gap-2 text-gray-300">
-                      <Check className="h-4 w-4 text-gaming-green" />
+                      <Check className="h-4 w-4 text-emerald-400" />
                       <span className="capitalize">{key.replace(/_/g, ' ')}:</span>
                       <span>
                         {Array.isArray(value) ? (value as string[]).join(', ') : String(value)}
@@ -201,15 +201,15 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             
             <div className="grid grid-cols-3 gap-4 pt-4">
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-black-light">
-                <Shield className="h-6 w-6 text-gaming-green mb-1" />
+                <Shield className="h-6 w-6 text-emerald-400 mb-1" />
                 <span className="text-xs text-gray-400">Secure Payment</span>
               </div>
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-black-light">
-                <Truck className="h-6 w-6 text-gaming-green mb-1" />
+                <Truck className="h-6 w-6 text-emerald-400 mb-1" />
                 <span className="text-xs text-gray-400">Instant Delivery</span>
               </div>
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-black-light">
-                <Star className="h-6 w-6 text-gaming-green mb-1" />
+                <Star className="h-6 w-6 text-emerald-400 mb-1" />
                 <span className="text-xs text-gray-400">Trusted Seller</span>
               </div>
             </div>
@@ -218,20 +218,24 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
         {/* Reviews & Ratings */}
         <div className="mt-16">
-          <Separator className="bg-gaming-green/20 mb-8" />
+          <Separator className="bg-emerald-400/20 mb-8" />
           <h2 className="text-2xl font-bold text-white mb-6">Reviews & Ratings</h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <ReviewList reviews={reviewList} />
+            {/* ✅ Pass current user ID to ReviewList - NO onReviewUpdated */}
+            <ReviewList 
+              reviews={reviewList} 
+              currentUserId={user?.id}
+            />
 
             <div>
               {!user && (
-                <p className="text-gray-400 p-4 rounded-lg bg-black-light border border-gaming-green/10">
+                <p className="text-gray-400 p-4 rounded-lg bg-black-light border border-emerald-400/10">
                   Please log in to write a review.
                 </p>
               )}
               {user && !hasPurchased && (
-                <p className="text-gray-400 p-4 rounded-lg bg-black-light border border-gaming-green/10">
+                <p className="text-gray-400 p-4 rounded-lg bg-black-light border border-emerald-400/10">
                   Only customers who have purchased this product can leave a review.
                 </p>
               )}
@@ -249,7 +253,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         {/* Related Products */}
         {relatedProducts.filter((p: Product) => p.id !== product.id).length > 0 && (
           <div className="mt-16">
-            <Separator className="bg-gaming-green/20 mb-8" />
+            <Separator className="bg-emerald-400/20 mb-8" />
             <ProductList 
               products={relatedProducts.filter((p: Product) => p.id !== product.id).slice(0, 4)}
               title="Related Products"

@@ -12,15 +12,21 @@ interface ReviewFormProps {
   productId: string
   userId: string
   existingReview: { id: string; rating: number; comment: string | null } | null
+  onReviewSubmitted?: () => void
 }
 
-export function ReviewForm({ productId, userId, existingReview }: ReviewFormProps) {
+export function ReviewForm({ productId, userId, existingReview, onReviewSubmitted }: ReviewFormProps) {
   const [rating, setRating] = useState(existingReview?.rating || 0)
   const [hoverRating, setHoverRating] = useState(0)
   const [comment, setComment] = useState(existingReview?.comment || '')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  // ✅ If user has already reviewed, hide the form completely
+  if (existingReview) {
+    return null // ✅ No form shown at all
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -45,11 +51,18 @@ export function ReviewForm({ productId, userId, existingReview }: ReviewFormProp
       if (error) throw error
 
       toast({
-        title: existingReview ? 'Review updated!' : 'Review submitted!',
+        title: 'Review submitted!',
         description: 'Thanks for your feedback.',
         variant: 'success',
       })
+
+      // ✅ Clear form
+      setComment('')
+      setRating(0)
+      
+      // ✅ Refresh and notify parent
       router.refresh()
+      onReviewSubmitted?.()
     } catch (error: any) {
       toast({
         title: 'Error submitting review',
@@ -63,9 +76,7 @@ export function ReviewForm({ productId, userId, existingReview }: ReviewFormProp
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded-lg bg-black-light border border-gaming-green/10">
-      <h3 className="font-semibold text-white">
-        {existingReview ? 'Update Your Review' : 'Write a Review'}
-      </h3>
+      <h3 className="font-semibold text-white">Write a Review</h3>
 
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
@@ -75,11 +86,12 @@ export function ReviewForm({ productId, userId, existingReview }: ReviewFormProp
             onMouseEnter={() => setHoverRating(star)}
             onMouseLeave={() => setHoverRating(0)}
             onClick={() => setRating(star)}
+            disabled={isSubmitting}
           >
             <Star
               className={`h-7 w-7 transition-colors ${
                 star <= (hoverRating || rating)
-                  ? 'fill-gaming-green text-gaming-green'
+                  ? 'fill-emerald-400 text-emerald-400'
                   : 'text-gray-600'
               }`}
             />
@@ -91,11 +103,16 @@ export function ReviewForm({ productId, userId, existingReview }: ReviewFormProp
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Share your thoughts about this product..."
-        className="w-full px-3 py-2 rounded-lg bg-black/50 border border-gaming-green/20 focus:border-gaming-green text-white min-h-[80px]"
+        className="w-full px-3 py-2 rounded-lg bg-black/50 border border-emerald-400/20 focus:border-emerald-400 text-white min-h-[80px]"
+        disabled={isSubmitting}
       />
 
-      <Button type="submit" disabled={isSubmitting} className="bg-gaming-green text-black hover:bg-gaming-green/80">
-        {isSubmitting ? 'Submitting...' : existingReview ? 'Update Review' : 'Submit Review'}
+      <Button 
+        type="submit" 
+        disabled={isSubmitting || rating === 0}
+        className="gaming-btn w-full"
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit Review'}
       </Button>
     </form>
   )

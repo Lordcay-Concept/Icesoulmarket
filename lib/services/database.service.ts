@@ -98,6 +98,24 @@ export class DatabaseService {
     }
   }
 
+static async getProductCount(): Promise<number> {
+    try {
+      const { count, error } = await this.supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true })
+
+      if (error) {
+        console.error('❌ Error counting products:', error)
+        return 0
+      }
+
+      return count || 0
+    } catch (error) {
+      console.error('❌ Error in getProductCount:', error)
+      return 0
+    }
+  }
+
 static async getProductsPaginated(
   filters?: ProductFilters,
   page: number = 1,
@@ -214,6 +232,7 @@ static async getProductsPaginated(
       return null
     }
   }
+
 
   static async getFeaturedProducts(): Promise<Product[]> {
     try {

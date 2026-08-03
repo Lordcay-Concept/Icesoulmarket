@@ -3,18 +3,25 @@
 
 import { useState, useEffect } from 'react'
 import { DatabaseService } from '@/lib/services/database.service'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
 import { 
   MessageSquare,
   Search,
   Mail,
   CheckCircle,
   Trash2,
-  Eye
+  ChevronDown,
+  ChevronUp,
+  User,
+  Calendar,
+  Sparkles
 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface Message {
   id: string
@@ -30,7 +37,7 @@ export default function AdminMessagesPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null)
+  const [expandedMessage, setExpandedMessage] = useState<string | null>(null)
 
   useEffect(() => {
     loadMessages()
@@ -68,7 +75,7 @@ export default function AdminMessagesPage() {
       if (error) throw error
 
       setMessages(messages.filter((m) => m.id !== id))
-      if (selectedMessage?.id === id) setSelectedMessage(null)
+      if (expandedMessage === id) setExpandedMessage(null)
       toast({ title: 'Success!', description: 'Message deleted', variant: 'success' })
     } catch (error) {
       console.error('Error deleting message:', error)
@@ -88,6 +95,10 @@ export default function AdminMessagesPage() {
       console.error('Error updating message:', error)
       toast({ title: 'Error', description: 'Failed to update message', variant: 'destructive' })
     }
+  }
+
+  const toggleMessageExpand = (messageId: string) => {
+    setExpandedMessage(expandedMessage === messageId ? null : messageId)
   }
 
   const filteredMessages = messages.filter(
@@ -126,20 +137,26 @@ export default function AdminMessagesPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-4">
-          {filteredMessages.map((message) => (
-            <Card
-              key={message.id}
-              className={`glass border-emerald-400/10 rounded-2xl hover:border-emerald-400/30 transition-all cursor-pointer ${
-                message.status === 'unread' ? 'border-l-4 border-l-emerald-400' : ''
+      <div className="space-y-4">
+        {filteredMessages.map((message) => {
+          const isExpanded = expandedMessage === message.id
+          const isUnread = message.status === 'unread'
+
+          return (
+            <Card 
+              key={message.id} 
+              className={`glass border-emerald-400/10 rounded-2xl hover:border-emerald-400/30 transition-all overflow-hidden ${
+                isUnread ? 'border-l-4 border-l-emerald-400' : ''
               }`}
-              onClick={() => setSelectedMessage(message)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between">
+              {/* Message Header - Always visible */}
+              <div 
+                className="p-5 cursor-pointer hover:bg-emerald-400/5 transition-colors"
+                onClick={() => toggleMessageExpand(message.id)}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3 flex-wrap">
                       <div className="p-2 rounded-xl bg-emerald-400/10">
                         <Mail className="h-4 w-4 text-emerald-400" />
                       </div>
@@ -147,26 +164,26 @@ export default function AdminMessagesPage() {
                         <p className="text-white font-medium">{message.name}</p>
                         <p className="text-sm text-gray-400">{message.email}</p>
                       </div>
+                      {isUnread && (
+                        <Badge className="bg-emerald-400/20 text-emerald-400 border-emerald-500/30 text-xs">
+                          New
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-white font-medium mt-2">{message.subject}</p>
-                    <p className="text-sm text-gray-400 mt-1 line-clamp-2">{message.message}</p>
-                    <div className="flex items-center gap-4 mt-2">
-                      <span className="text-xs text-gray-400">
-                        {new Date(message.created_at).toLocaleDateString()}
+                    <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
+                      <span>
+                        {new Date(message.created_at).toLocaleDateString()} at{' '}
+                        {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-xs ${
-                          message.status === 'unread'
-                            ? 'bg-emerald-400/20 text-emerald-400'
-                            : 'bg-gray-400/20 text-gray-400'
-                        }`}
-                      >
-                        {message.status === 'unread' ? 'Unread' : 'Read'}
+                      <span className="text-gray-600">•</span>
+                      <span className={isUnread ? 'text-emerald-400' : ''}>
+                        {isUnread ? 'Unread' : 'Read'}
                       </span>
                     </div>
                   </div>
-                  <div className="flex gap-2 ml-4">
-                    {message.status === 'unread' && (
+                  <div className="flex items-center gap-2">
+                    {isUnread && (
                       <Button
                         size="sm"
                         variant="ghost"
@@ -190,79 +207,117 @@ export default function AdminMessagesPage() {
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-
-          {filteredMessages.length === 0 && (
-            <div className="text-center py-12">
-              <MessageSquare className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400">No messages found</p>
-            </div>
-          )}
-        </div>
-
-        <div className="lg:col-span-1">
-          <Card className="glass border-emerald-400/10 rounded-2xl sticky top-24">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Eye className="h-5 w-5 text-emerald-400" />
-                Message Details
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {selectedMessage ? (
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-400">From</p>
-                    <p className="text-white font-medium">{selectedMessage.name}</p>
-                    <p className="text-sm text-gray-400">{selectedMessage.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">Subject</p>
-                    <p className="text-white font-medium">{selectedMessage.subject}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">Message</p>
-                    <p className="text-white mt-1">{selectedMessage.message}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">Received</p>
-                    <p className="text-white">
-                      {new Date(selectedMessage.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex gap-2 pt-4 border-t border-emerald-400/10">
-                    {selectedMessage.status === 'unread' && (
-                      <Button
-                        className="flex-1 bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
-                        onClick={() => handleMarkRead(selectedMessage.id)}
-                      >
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        Mark Read
-                      </Button>
-                    )}
-                    <Button
-                      variant="outline"
-                      className="flex-1 border-red-400/20 text-red-400 hover:bg-red-400/10"
-                      onClick={() => handleDelete(selectedMessage.id)}
+                    <button 
+                      className="p-1.5 rounded-full hover:bg-emerald-400/10 transition-colors text-gray-400 hover:text-white"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleMessageExpand(message.id)
+                      }}
                     >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete
-                    </Button>
+                      {isExpanded ? (
+                        <ChevronUp className="h-5 w-5" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5" />
+                      )}
+                    </button>
                   </div>
                 </div>
-              ) : (
-                <div className="text-center py-8">
-                  <MessageSquare className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                  <p className="text-gray-400">Select a message to view details</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+              </div>
+
+              {/* Message Details - Expandable */}
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="overflow-hidden"
+                  >
+                    <Separator className="bg-emerald-400/10" />
+                    <div className="p-5 space-y-4">
+                      {/* Sender Info */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                          <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                            <User className="h-4 w-4" />
+                            Sender Information
+                          </div>
+                          <p className="text-white font-medium">
+                            {message.name}
+                          </p>
+                          <p className="text-sm text-gray-400">
+                            {message.email}
+                          </p>
+                        </div>
+                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                          <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                            <Calendar className="h-4 w-4" />
+                            Message Details
+                          </div>
+                          <p className="text-white">
+                            Subject: <span className="text-sm text-gray-400">{message.subject}</span>
+                          </p>
+                          <p className="text-white">
+                            Status: <span className={`text-sm ${isUnread ? 'text-emerald-400' : 'text-gray-400'}`}>
+                              {isUnread ? 'Unread' : 'Read'}
+                            </span>
+                          </p>
+                          <p className="text-white">
+                            Received: <span className="text-sm text-gray-400">
+                              {new Date(message.created_at).toLocaleString()}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Message Content */}
+                      <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                        <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                          <MessageSquare className="h-4 w-4" />
+                          Message Content
+                        </div>
+                        <p className="text-white whitespace-pre-wrap leading-relaxed">
+                          {message.message}
+                        </p>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {isUnread && (
+                          <Button
+                            size="sm"
+                            className="bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
+                            onClick={() => handleMarkRead(message.id)}
+                          >
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Mark as Read
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-red-400/30 text-red-400 hover:bg-red-400/10"
+                          onClick={() => handleDelete(message.id)}
+                        >
+                          <Trash2 className="h-3 w-3 mr-1" />
+                          Delete Message
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Card>
+          )
+        })}
+
+        {filteredMessages.length === 0 && (
+          <div className="text-center py-12">
+            <MessageSquare className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No messages found</p>
+          </div>
+        )}
       </div>
     </div>
   )

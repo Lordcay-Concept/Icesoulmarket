@@ -2,7 +2,7 @@
 'use client'
 
 import { useAuth } from '@/lib/hooks/useAuth'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { 
@@ -19,7 +19,9 @@ import {
   Sparkles,
   CreditCard,
   Lock,
-  Tag
+  Tag,
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -50,11 +52,16 @@ export default function AdminLayout({
 }) {
   const { user, profile, loading, isAdmin, signOut } = useAuth()
   const router = useRouter()
+  const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isHydrated, setIsHydrated] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   useEffect(() => {
     setIsHydrated(true)
+    // Restore collapsed preference from a previous session
+    const saved = localStorage.getItem('admin-sidebar-collapsed')
+    if (saved === 'true') setIsCollapsed(true)
   }, [])
 
   useEffect(() => {
@@ -65,6 +72,17 @@ export default function AdminLayout({
       router.push('/')
     }
   }, [user, loading, isAdmin, router, isHydrated])
+
+  // Close the mobile drawer automatically whenever the route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
+
+  const toggleCollapsed = () => {
+    const next = !isCollapsed
+    setIsCollapsed(next)
+    localStorage.setItem('admin-sidebar-collapsed', String(next))
+  }
 
   const handleSignOut = async () => {
     await signOut()
@@ -88,7 +106,18 @@ export default function AdminLayout({
       {/* Admin Navbar */}
       <nav className="fixed top-0 z-50 w-full glass border-b border-emerald-400/10">
         <div className="flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* Desktop collapse toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden md:flex text-gray-400 hover:text-emerald-400"
+              onClick={toggleCollapsed}
+              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {isCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
+            </Button>
+
             <Link href="/admin/dashboard" className="flex items-center gap-2">
               <Gamepad2 className="h-6 w-6 text-emerald-400 neon-glow" />
               <span className="text-xl font-bold">
@@ -109,6 +138,7 @@ export default function AdminLayout({
                 {profile?.username?.[0]?.toUpperCase() || 'A'}
               </AvatarFallback>
             </Avatar>
+            {/* Mobile hamburger */}
             <Button
               variant="ghost"
               size="icon"
@@ -117,7 +147,6 @@ export default function AdminLayout({
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
-            {/* ✅ Desktop logout button - visible on md+ */}
             <Button
               variant="ghost"
               size="icon"
@@ -131,42 +160,51 @@ export default function AdminLayout({
       </nav>
 
       <div className="flex pt-16">
-        {/* ✅ Sidebar - Scrollable with Logout at bottom */}
-        <aside className={`fixed z-40 h-[calc(100vh-4rem)] w-64 glass border-r border-emerald-400/10 transition-transform flex flex-col ${
+        {/* Sidebar */}
+        <aside className={`fixed z-40 h-[calc(100vh-4rem)] glass border-r border-emerald-400/10 transition-all duration-300 flex flex-col ${
+          isCollapsed ? 'w-20' : 'w-64'
+        } ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0`}>
-          {/* ✅ Scrollable nav area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-1">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-1">
             {navItems.map((item) => {
-              const IconComponent = item.icon 
+              const IconComponent = item.icon
+              const isActive = pathname === item.href
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-emerald-400/10 transition-all"
+                  title={isCollapsed ? item.label : undefined}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                    isActive
+                      ? 'text-emerald-400 bg-emerald-400/10'
+                      : 'text-gray-400 hover:text-white hover:bg-emerald-400/10'
+                  } ${isCollapsed ? 'justify-center' : ''}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <IconComponent className="h-5 w-5" /> 
-                  <span>{item.label}</span>
+                  <IconComponent className="h-5 w-5 flex-shrink-0" />
+                  {!isCollapsed && <span className="whitespace-nowrap">{item.label}</span>}
                 </Link>
               )
             })}
           </div>
 
-          {/* ✅ Logout button - Fixed at bottom of sidebar */}
           <div className="border-t border-emerald-400/10 p-4">
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-all"
+              title={isCollapsed ? 'Logout' : undefined}
+              className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-all ${
+                isCollapsed ? 'justify-center' : ''
+              }`}
             >
-              <LogOut className="h-5 w-5" />
-              <span>Logout</span>
+              <LogOut className="h-5 w-5 flex-shrink-0" />
+              {!isCollapsed && <span>Logout</span>}
             </button>
           </div>
         </aside>
 
-        {/* Main Content */}
-        <main className="flex-1 md:ml-64 p-6">
+        {/* Main Content — margin adjusts to match sidebar width */}
+        <main className={`flex-1 p-6 transition-all duration-300 ${isCollapsed ? 'md:ml-20' : 'md:ml-64'}`}>
           {children}
         </main>
       </div>

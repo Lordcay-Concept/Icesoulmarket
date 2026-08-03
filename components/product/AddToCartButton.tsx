@@ -21,6 +21,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       price: product.discount_price || product.price,
       image: product.images[0] || '/images/placeholder.jpg',
       platform: product.platform[0],
+      category_id: product.category_id,
     })
 
     toast({
