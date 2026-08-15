@@ -709,6 +709,26 @@ static async updateStoreSettings(defaultCurrency: string, userId: string) {
   if (error) throw error
 }
 
+static async updateTheme(themeId: string, customColors: any, userId: string) {
+  const supabase = this.getSupabaseClient()
+  const { data: existing } = await supabase
+    .from('store_settings')
+    .select('id')
+    .single()
+
+  const { error } = await supabase
+    .from('store_settings')
+    .update({
+      theme_id: themeId,
+      custom_theme_colors: customColors,
+      updated_at: new Date().toISOString(),
+      updated_by: userId,
+    })
+    .eq('id', existing?.id)
+
+  if (error) throw error
+}
+
 static async updateCategoryCurrency(categoryId: string, currencyOverride: string | null) {
   const supabase = this.getSupabaseClient()
   const { error } = await supabase

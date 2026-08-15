@@ -73,7 +73,7 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
         <div className="container mx-auto px-4 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -82,11 +82,11 @@ export default function ContactPage() {
             className="text-center mb-12"
           >
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Gamepad2 className="h-8 w-8 text-emerald-400 neon-glow" />
-              <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+              <Gamepad2 className="h-8 w-8 text-theme neon-glow" />
+              <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white">
-              <span className="text-emerald-400 neon-glow">Contact</span> Our Team
+              <span className="text-theme neon-glow">Contact</span> Our Team
             </h1>
             <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
               Have questions about our products? Need help with your order? 
@@ -101,16 +101,16 @@ export default function ContactPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                <div className="glass rounded-2xl border border-emerald-400/20 p-6 space-y-6">
+                <div className="glass rounded-2xl border border-theme/20 p-6 space-y-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <Headphones className="h-6 w-6 text-emerald-400" />
+                    <Headphones className="h-6 w-6 text-theme" />
                     <h3 className="text-lg font-bold text-white">Get in Touch</h3>
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="flex items-start gap-4 p-3 rounded-xl bg-emerald-400/5 border border-emerald-400/10 hover:border-emerald-400/30 transition-all group">
-                      <div className="p-2 rounded-lg bg-emerald-400/10 group-hover:bg-emerald-400/20 transition-all">
-                        <Mail className="h-5 w-5 text-emerald-400" />
+                    <div className="flex items-start gap-4 p-3 rounded-xl bg-theme/5 border border-theme/10 hover:border-theme/30 transition-all group">
+                      <div className="p-2 rounded-lg bg-theme/10 group-hover:bg-theme/20 transition-all">
+                        <Mail className="h-5 w-5 text-theme" />
                       </div>
                       <div>
                         <h4 className="text-white font-medium text-sm">Email</h4>
@@ -118,9 +118,9 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4 p-3 rounded-xl bg-emerald-400/5 border border-emerald-400/10 hover:border-emerald-400/30 transition-all group">
-                      <div className="p-2 rounded-lg bg-emerald-400/10 group-hover:bg-emerald-400/20 transition-all">
-                        <Phone className="h-5 w-5 text-emerald-400" />
+                    <div className="flex items-start gap-4 p-3 rounded-xl bg-theme/5 border border-theme/10 hover:border-theme/30 transition-all group">
+                      <div className="p-2 rounded-lg bg-theme/10 group-hover:bg-theme/20 transition-all">
+                        <Phone className="h-5 w-5 text-theme" />
                       </div>
                       <div>
                         <h4 className="text-white font-medium text-sm">Phone</h4>
@@ -128,9 +128,9 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4 p-3 rounded-xl bg-emerald-400/5 border border-emerald-400/10 hover:border-emerald-400/30 transition-all group">
-                      <div className="p-2 rounded-lg bg-emerald-400/10 group-hover:bg-emerald-400/20 transition-all">
-                        <Clock className="h-5 w-5 text-emerald-400" />
+                    <div className="flex items-start gap-4 p-3 rounded-xl bg-theme/5 border border-theme/10 hover:border-theme/30 transition-all group">
+                      <div className="p-2 rounded-lg bg-theme/10 group-hover:bg-theme/20 transition-all">
+                        <Clock className="h-5 w-5 text-theme" />
                       </div>
                       <div>
                         <h4 className="text-white font-medium text-sm">Support Hours</h4>
@@ -138,9 +138,9 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4 p-3 rounded-xl bg-emerald-400/5 border border-emerald-400/10 hover:border-emerald-400/30 transition-all group">
-                      <div className="p-2 rounded-lg bg-emerald-400/10 group-hover:bg-emerald-400/20 transition-all">
-                        <MapPin className="h-5 w-5 text-emerald-400" />
+                    <div className="flex items-start gap-4 p-3 rounded-xl bg-theme/5 border border-theme/10 hover:border-theme/30 transition-all group">
+                      <div className="p-2 rounded-lg bg-theme/10 group-hover:bg-theme/20 transition-all">
+                        <MapPin className="h-5 w-5 text-theme" />
                       </div>
                       <div>
                         <h4 className="text-white font-medium text-sm">Location</h4>
@@ -149,11 +149,11 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-emerald-400/10">
+                  <div className="pt-4 border-t border-theme/10">
                     <div className="flex items-center gap-2 text-xs text-gray-500">
                       <Shield className="h-3 w-3" />
                       <span>Your data is safe with us</span>
-                      <CheckCircle className="h-3 w-3 text-emerald-400" />
+                      <CheckCircle className="h-3 w-3 text-theme" />
                     </div>
                   </div>
                 </div>
@@ -164,11 +164,11 @@ export default function ContactPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <div className="glass rounded-2xl border border-emerald-400/20 p-6 text-center">
+                <div className="glass rounded-2xl border border-theme/20 p-6 text-center">
                   <div className="text-4xl mb-3">⚡</div>
                   <h4 className="text-white font-bold mb-1">Quick Response</h4>
                   <p className="text-gray-400 text-sm">
-                    We typically respond within <span className="text-emerald-400">1-2 hours</span>
+                    We typically respond within <span className="text-theme">1-2 hours</span>
                   </p>
                 </div>
               </motion.div>
@@ -180,9 +180,9 @@ export default function ContactPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
-                <div className="glass rounded-2xl border border-emerald-400/20 p-8">
+                <div className="glass rounded-2xl border border-theme/20 p-8">
                   <div className="flex items-center gap-3 mb-6">
-                    <MessageCircle className="h-6 w-6 text-emerald-400" />
+                    <MessageCircle className="h-6 w-6 text-theme" />
                     <h2 className="text-2xl font-bold text-white">Send Us a Message</h2>
                   </div>
                   
@@ -196,7 +196,7 @@ export default function ContactPage() {
                           placeholder="John Doe" 
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
+                          className="bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
                           required
                         />
                       </div>
@@ -209,7 +209,7 @@ export default function ContactPage() {
                           placeholder="john@example.com" 
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
+                          className="bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
                           required
                         />
                       </div>
@@ -223,7 +223,7 @@ export default function ContactPage() {
                         placeholder="Order inquiry..." 
                         value={formData.subject}
                         onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                        className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
+                        className="bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
                         required
                       />
                     </div>
@@ -236,7 +236,7 @@ export default function ContactPage() {
                         placeholder="Write your message here..." 
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500 min-h-[150px] rounded-xl transition-all"
+                        className="bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500 min-h-[150px] rounded-xl transition-all"
                         required
                       />
                     </div>

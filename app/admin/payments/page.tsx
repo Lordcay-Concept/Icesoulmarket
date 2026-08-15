@@ -189,7 +189,7 @@ export default function AdminPaymentsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'approved': return 'bg-emerald-400/20 text-emerald-400 border-emerald-500/30'
+      case 'approved': return 'bg-theme/20 text-theme border-theme-500/30'
       case 'pending_verification': return 'bg-yellow-400/20 text-yellow-400 border-yellow-500/30'
       case 'rejected': return 'bg-red-400/20 text-red-400 border-red-500/30'
       case 'pending': return 'bg-gray-400/20 text-gray-400 border-gray-500/30'
@@ -238,7 +238,7 @@ export default function AdminPaymentsPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">
-          <span className="text-emerald-400 neon-glow">Payments</span>
+          <span className="text-theme neon-glow">Payments</span>
         </h1>
         <p className="text-gray-400 mt-1">Manage payment verifications</p>
       </div>
@@ -250,7 +250,7 @@ export default function AdminPaymentsPage() {
             placeholder="Search payments..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+            className="pl-9 bg-black/50 border-theme/20 focus:border-theme text-white"
           />
         </div>
       </div>
@@ -264,10 +264,10 @@ export default function AdminPaymentsPage() {
           const order = payment.orders
           
           return (
-            <Card key={payment.id} className="glass border-emerald-400/10 rounded-2xl hover:border-emerald-400/30 transition-all overflow-hidden">
+            <Card key={payment.id} className="glass border-theme/10 rounded-2xl hover:border-theme/30 transition-all overflow-hidden">
               {/* Payment Header */}
               <div 
-                className="p-5 cursor-pointer hover:bg-emerald-400/5 transition-colors"
+                className="p-5 cursor-pointer hover:bg-theme/5 transition-colors"
                 onClick={() => togglePaymentExpand(payment.id)}
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -300,12 +300,12 @@ export default function AdminPaymentsPage() {
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <div className="text-sm text-gray-400">Amount</div>
-                      <div className="text-lg font-bold text-emerald-400 neon-glow">
+                      <div className="text-lg font-bold text-theme neon-glow">
                         {formatPrice(payment.amount)}
                       </div>
                     </div>
                     <button 
-                      className="p-1.5 rounded-full hover:bg-emerald-400/10 transition-colors text-gray-400 hover:text-white"
+                      className="p-1.5 rounded-full hover:bg-theme/10 transition-colors text-gray-400 hover:text-white"
                       onClick={(e) => {
                         e.stopPropagation()
                         togglePaymentExpand(payment.id)
@@ -331,11 +331,11 @@ export default function AdminPaymentsPage() {
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
-                    <Separator className="bg-emerald-400/10" />
+                    <Separator className="bg-theme/10" />
                     <div className="p-5 space-y-4">
                       {/* Payment Info */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                        <div className="bg-black/30 rounded-xl p-4 border border-theme/10">
                           <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
                             <CreditCard className="h-4 w-4" />
                             Payment Details
@@ -344,13 +344,13 @@ export default function AdminPaymentsPage() {
                             Payment ID: <span className="text-sm text-gray-400">{payment.id}</span>
                           </p>
                           <p className="text-white">
-                            Amount: <span className="text-sm text-emerald-400 font-bold">{formatPrice(payment.amount)}</span>
+                            Amount: <span className="text-sm text-theme font-bold">{formatPrice(payment.amount)}</span>
                           </p>
                           <p className="text-white">
                             Status: <span className="text-sm">{statusLabel}</span>
                           </p>
                         </div>
-                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                        <div className="bg-black/30 rounded-xl p-4 border border-theme/10">
                           <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
                             <Calendar className="h-4 w-4" />
                             Order Information
@@ -383,13 +383,13 @@ export default function AdminPaymentsPage() {
                             </div>
                             <div className="bg-black/30 rounded-lg p-3">
                               <p className="text-xs text-gray-400">Discount</p>
-                              <p className="text-emerald-400 font-medium">
+                              <p className="text-theme font-medium">
                                 {payment.promo_usage.promo_code?.discount_percentage || 0}%
                               </p>
                             </div>
                             <div className="bg-black/30 rounded-lg p-3">
                               <p className="text-xs text-gray-400">Discount Amount</p>
-                              <p className="text-emerald-400 font-medium">
+                              <p className="text-theme font-medium">
                                 -{formatPrice(payment.promo_usage.discount_amount || 0)}
                               </p>
                             </div>
@@ -420,7 +420,7 @@ export default function AdminPaymentsPage() {
                           <Button
                             size="sm"
                             disabled={processingId === payment.id}
-                            className="bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
+                            className="bg-theme/10 text-theme hover:bg-theme/20"
                             onClick={() => handleApprove(payment)}
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />
@@ -483,7 +483,7 @@ function PaymentOrderItems({ orderId, promoUsage }: { orderId: string; promoUsag
 
   if (loading) {
     return (
-      <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+      <div className="bg-black/30 rounded-xl p-4 border border-theme/10">
         <div className="text-gray-400 text-sm">Loading items...</div>
       </div>
     )
@@ -505,9 +505,9 @@ function PaymentOrderItems({ orderId, promoUsage }: { orderId: string; promoUsag
         <Package className="h-4 w-4" />
         Order Items
       </h4>
-      <div className="space-y-2 bg-black/30 rounded-xl p-3 border border-emerald-400/10">
+      <div className="space-y-2 bg-black/30 rounded-xl p-3 border border-theme/10">
         {items.map((item, idx) => (
-          <div key={idx} className="flex justify-between items-center text-sm py-1.5 border-b border-emerald-400/5 last:border-0">
+          <div key={idx} className="flex justify-between items-center text-sm py-1.5 border-b border-theme/5 last:border-0">
             <div className="flex items-center gap-3">
               <span className="text-gray-300">
                 {item.product_name}
@@ -520,7 +520,7 @@ function PaymentOrderItems({ orderId, promoUsage }: { orderId: string; promoUsag
           </div>
         ))}
         
-        <Separator className="bg-emerald-400/10 my-2" />
+        <Separator className="bg-theme/10 my-2" />
         
         {/* ✅ Show subtotal */}
         <div className="flex justify-between text-sm">
@@ -534,15 +534,15 @@ function PaymentOrderItems({ orderId, promoUsage }: { orderId: string; promoUsag
             <span className="text-gray-400">
               Discount ({promoUsage.promo_code?.discount_percentage || 0}%)
             </span>
-            <span className="text-emerald-400">-{formatPrice(discountAmount)}</span>
+            <span className="text-theme">-{formatPrice(discountAmount)}</span>
           </div>
         )}
         
-        <Separator className="bg-emerald-400/10 my-2" />
+        <Separator className="bg-theme/10 my-2" />
         
         <div className="flex justify-between font-bold">
           <span className="text-white">Total</span>
-          <span className="text-emerald-400 neon-glow">
+          <span className="text-theme neon-glow">
             {formatPrice(finalTotal)}
           </span>
         </div>

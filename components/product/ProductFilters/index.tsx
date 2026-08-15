@@ -65,13 +65,13 @@ export function ProductFiltersComponent({
     <div className="space-y-4">
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme" />
           <Input
             placeholder="Search products..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-            className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500"
+            className="pl-9 bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500"
           />
         </div>
         <Button 
@@ -92,10 +92,10 @@ export function ProductFiltersComponent({
                 setCategory(value)
               }}
             >
-              <SelectTrigger className="bg-black/50 border-emerald-400/20 text-white focus:border-emerald-400">
+              <SelectTrigger className="bg-black/50 border-theme/20 text-white focus:border-theme">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
-              <SelectContent className="glass border-emerald-400/20">
+              <SelectContent className="glass border-theme/20">
                 <SelectItem value="">All Categories</SelectItem>
                 {categories.map((cat) => (
                   <SelectItem key={cat.id} value={cat.slug}>
@@ -110,10 +110,10 @@ export function ProductFiltersComponent({
         <div className="flex-1 min-w-[150px]">
           <Label className="text-sm text-gray-400 mb-1 block">Platform</Label>
           <Select value={platform} onValueChange={(value) => setPlatform(value)}>
-            <SelectTrigger className="bg-black/50 border-emerald-400/20 text-white focus:border-emerald-400">
+            <SelectTrigger className="bg-black/50 border-theme/20 text-white focus:border-theme">
               <SelectValue placeholder="All Platforms" />
             </SelectTrigger>
-            <SelectContent className="glass border-emerald-400/20">
+            <SelectContent className="glass border-theme/20">
               <SelectItem value="">All Platforms</SelectItem>
               {platforms.map((p) => (
                 <SelectItem key={p} value={p}>{p}</SelectItem>
@@ -125,10 +125,10 @@ export function ProductFiltersComponent({
         <div className="flex-1 min-w-[150px]">
           <Label className="text-sm text-gray-400 mb-1 block">Sort By</Label>
           <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
-            <SelectTrigger className="bg-black/50 border-emerald-400/20 text-white focus:border-emerald-400">
+            <SelectTrigger className="bg-black/50 border-theme/20 text-white focus:border-theme">
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
-            <SelectContent className="glass border-emerald-400/20">
+            <SelectContent className="glass border-theme/20">
               <SelectItem value="newest">Newest</SelectItem>
               <SelectItem value="price_asc">Price: Low to High</SelectItem>
               <SelectItem value="price_desc">Price: High to Low</SelectItem>
@@ -141,7 +141,7 @@ export function ProductFiltersComponent({
           <Button
             variant="ghost"
             onClick={clearFilters}
-            className="text-gray-400 hover:text-white hover:bg-emerald-400/10"
+            className="text-gray-400 hover:text-white hover:bg-theme/10"
           >
             <X className="h-4 w-4 mr-1" />
             Clear Filters

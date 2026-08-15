@@ -1,4 +1,3 @@
-// components/shared/Footer/index.tsx
 import Link from 'next/link'
 import { Gamepad2, Sparkles, Mail } from 'lucide-react'
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
@@ -11,17 +10,17 @@ const TikTokIcon = () => (
 
 export function Footer() {
   return (
-    <footer className="border-t border-emerald-400/10 bg-black">
+    <footer className="border-t border-theme-10 bg-black">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-3">
             <Link href="/" className="flex items-center gap-2">
-              <Gamepad2 className="h-6 w-6 text-emerald-400" />
+              <Gamepad2 className="h-6 w-6 text-theme" />
               <span className="text-xl font-bold">
                 <span className="text-white">Icesoul</span>
-                <span className="text-emerald-400">Market</span>
+                <span className="text-theme">Market</span>
               </span>
-              <Sparkles className="h-4 w-4 text-emerald-300" />
+              <Sparkles className="h-4 w-4 text-theme-70" />
             </Link>
             <p className="text-sm text-gray-400">
               Premium gaming accounts, skins, and in-game currency, delivered instantly.
@@ -31,33 +30,33 @@ export function Footer() {
           <div className="space-y-3">
             <h3 className="text-white font-semibold">Shop</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/products" className="text-gray-400 hover:text-emerald-400 transition-colors">All Products</Link></li>
-              <li><Link href="/categories" className="text-gray-400 hover:text-emerald-400 transition-colors">Categories</Link></li>
-              <li><Link href="/products?sort=popular" className="text-gray-400 hover:text-emerald-400 transition-colors">Best Sellers</Link></li>
+              <li><Link href="/products" className="text-gray-400 hover:text-theme transition-colors">All Products</Link></li>
+              <li><Link href="/categories" className="text-gray-400 hover:text-theme transition-colors">Categories</Link></li>
+              <li><Link href="/products?sort=popular" className="text-gray-400 hover:text-theme transition-colors">Best Sellers</Link></li>
             </ul>
           </div>
 
           <div className="space-y-3">
             <h3 className="text-white font-semibold">Support</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/contact" className="text-gray-400 hover:text-emerald-400 transition-colors">Contact Us</Link></li>
-              <li><Link href="/account/orders" className="text-gray-400 hover:text-emerald-400 transition-colors">Track Order</Link></li>
-              <li><Link href="/faq" className="text-gray-400 hover:text-emerald-400 transition-colors">FAQ</Link></li>
+              <li><Link href="/contact" className="text-gray-400 hover:text-theme transition-colors">Contact Us</Link></li>
+              <li><Link href="/account/orders" className="text-gray-400 hover:text-theme transition-colors">Track Order</Link></li>
+              <li><Link href="/faq" className="text-gray-400 hover:text-theme transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
           <div className="space-y-3">
             <h3 className="text-white font-semibold">Legal</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/privacy" className="text-gray-400 hover:text-emerald-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-gray-400 hover:text-emerald-400 transition-colors">Terms of Service</Link></li>
+              <li><Link href="/privacy" className="text-gray-400 hover:text-theme transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-gray-400 hover:text-theme transition-colors">Terms of Service</Link></li>
             </ul>
             <div className="pt-2">
-                <a
+              <a
                 href="https://www.tiktok.com/@icesoulmarket.com?_r=1&_t=ZG-98MOI5C35Mm"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-gray-400 hover:text-emerald-400 transition-colors"
+                className="inline-flex items-center gap-2 text-gray-400 hover:text-theme transition-colors"
               >
                 <TikTokIcon />
                 <span className="text-sm">Follow us on TikTok</span>
@@ -69,7 +68,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-emerald-400/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
+        <div className="mt-10 pt-6 border-t border-theme-10 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
           <p>© {new Date().getFullYear()} IcesoulMarket. All rights reserved.</p>
           <div className="flex items-center gap-1">
             <Mail className="h-3 w-3" />

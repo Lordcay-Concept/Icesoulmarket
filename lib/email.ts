@@ -39,3 +39,16 @@ export async function sendUserPaymentRejected(userEmail: string, orderNumber: st
     `,
   })
 }
+
+export async function sendNewOrderNotification(adminEmails: string[], orderNumber: string, amount: string, customerEmail: string) {
+  return resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL!,
+    to: adminEmails,
+    subject: `🛒 New Order Received — ${orderNumber}`,
+    html: `
+      <h2>New Order Placed</h2>
+      <p>Order <strong>${orderNumber}</strong> (${amount}) was just placed by ${customerEmail}.</p>
+      <p>It's awaiting customer payment. Check the admin dashboard once payment is confirmed.</p>
+    `,
+  })
+}

@@ -102,16 +102,16 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-black to-emerald-950/10">
+    <div className="min-h-screen bg-gradient-to-b from-black via-black to-theme-950/10">
       {/* Admin Navbar */}
-      <nav className="fixed top-0 z-50 w-full glass border-b border-emerald-400/10">
+      <nav className="fixed top-0 z-50 w-full glass border-b border-theme/10">
         <div className="flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             {/* Desktop collapse toggle */}
             <Button
               variant="ghost"
               size="icon"
-              className="hidden md:flex text-gray-400 hover:text-emerald-400"
+              className="hidden md:flex text-gray-400 hover:text-theme"
               onClick={toggleCollapsed}
               title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
@@ -119,22 +119,22 @@ export default function AdminLayout({
             </Button>
 
             <Link href="/admin/dashboard" className="flex items-center gap-2">
-              <Gamepad2 className="h-6 w-6 text-emerald-400 neon-glow" />
+              <Gamepad2 className="h-6 w-6 text-theme neon-glow" />
               <span className="text-xl font-bold">
                 <span className="text-white">IcesoulMarket</span>
-                <span className="text-emerald-400 neon-glow">Admin</span>
+                <span className="text-theme neon-glow">Admin</span>
               </span>
             </Link>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-2 text-sm text-gray-400">
-              <Sparkles className="h-4 w-4 text-emerald-400" />
+              <Sparkles className="h-4 w-4 text-theme" />
               <span>{profile?.username || 'Admin'}</span>
             </div>
-            <Avatar className="h-8 w-8 border border-emerald-400/30">
+            <Avatar className="h-8 w-8 border border-theme/30">
               <AvatarImage src={user.user_metadata?.avatar_url} />
-              <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-black font-bold">
+              <AvatarFallback className="bg-gradient-to-br from-theme-500 to-green-600 text-black font-bold">
                 {profile?.username?.[0]?.toUpperCase() || 'A'}
               </AvatarFallback>
             </Avatar>
@@ -161,7 +161,7 @@ export default function AdminLayout({
 
       <div className="flex pt-16">
         {/* Sidebar */}
-        <aside className={`fixed z-40 h-[calc(100vh-4rem)] glass border-r border-emerald-400/10 transition-all duration-300 flex flex-col ${
+        <aside className={`fixed z-40 h-[calc(100vh-4rem)] glass border-r border-theme/10 transition-all duration-300 flex flex-col ${
           isCollapsed ? 'w-20' : 'w-64'
         } ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -177,8 +177,8 @@ export default function AdminLayout({
                   title={isCollapsed ? item.label : undefined}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     isActive
-                      ? 'text-emerald-400 bg-emerald-400/10'
-                      : 'text-gray-400 hover:text-white hover:bg-emerald-400/10'
+                      ? 'text-theme bg-theme/10'
+                      : 'text-gray-400 hover:text-white hover:bg-theme/10'
                   } ${isCollapsed ? 'justify-center' : ''}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -189,7 +189,7 @@ export default function AdminLayout({
             })}
           </div>
 
-          <div className="border-t border-emerald-400/10 p-4">
+          <div className="border-t border-theme/10 p-4">
             <button
               onClick={handleSignOut}
               title={isCollapsed ? 'Logout' : undefined}

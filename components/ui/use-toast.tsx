@@ -136,6 +136,7 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, 'id'>
 
+// ✅ Updated: Toast function with better defaults
 function toast({ ...props }: Toast) {
   const id = genId()
 

@@ -71,26 +71,26 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
           <div className="container mx-auto px-4 py-8">
 
             {activeCategory && (
               <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-                <Link href="/categories" className="hover:text-emerald-400 transition-colors">
+                <Link href="/categories" className="hover:text-theme transition-colors">
                   Categories
                 </Link>
                 <ChevronRight className="h-3 w-3" />
-                <span className="text-emerald-400">{activeCategory.name}</span>
+                <span className="text-theme">{activeCategory.name}</span>
               </div>
             )}
 
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-2">
-                <Gamepad2 className="h-8 w-8 text-emerald-400 neon-glow" />
+                <Gamepad2 className="h-8 w-8 text-theme neon-glow" />
                 <h1 className="gaming-title text-4xl md:text-5xl">
                   {pageTitle}
                 </h1>
-                <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+                <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
               </div>
               <p className="text-gray-400 text-lg">
                 {pageDescription}
@@ -125,7 +125,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
           <div className="container mx-auto px-4 py-8">
             <div className="text-center py-12">
               <h2 className="text-2xl font-bold text-white mb-4">Error Loading Products</h2>

@@ -20,7 +20,7 @@ export function WhatsAppButton({ message = DEFAULT_MESSAGE, variant = 'floating'
         href={link}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 text-gray-400 hover:text-emerald-400 transition-colors"
+        className="inline-flex items-center gap-2 text-gray-400 hover:text-theme transition-colors"
       >
         <MessageCircle className="h-5 w-5" />
         <span className="text-sm">Chat with us on WhatsApp</span>
@@ -28,15 +28,16 @@ export function WhatsAppButton({ message = DEFAULT_MESSAGE, variant = 'floating'
     )
   }
 
+  // Floating button - uses theme colors with subtle WhatsApp hint
   return (
     <a
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20BD5A] shadow-lg shadow-black/30 transition-all hover:scale-110"
+      className="fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-theme hover:bg-theme/80 shadow-lg shadow-black/30 transition-all hover:scale-110 group"
       aria-label="Chat on WhatsApp"
     >
-      <MessageCircle className="h-7 w-7 text-white fill-white" />
+      <MessageCircle className="h-7 w-7 text-theme-text-on-primary fill-theme-text-on-primary group-hover:scale-110 transition-transform" />
     </a>
   )
 }

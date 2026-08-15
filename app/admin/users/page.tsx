@@ -60,12 +60,20 @@ export default function AdminUsersPage() {
   const toggleAdmin = async (user: UserProfile) => {
     try {
       const supabase = DatabaseService.getSupabaseClient()
-      const { error } = await supabase
+
+      
+      const { data, error } = await supabase
         .from('profiles')
         .update({ is_admin: !user.is_admin })
         .eq('id', user.id)
+        .select()
+        .single()
 
       if (error) throw error
+
+      if (!data || data.is_admin === user.is_admin) {
+        throw new Error('Update did not apply — check admin permissions')
+      }
 
       toast({
         title: 'Success!',
@@ -73,11 +81,11 @@ export default function AdminUsersPage() {
         variant: 'success',
       })
       loadUsers()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating user:', error)
       toast({
         title: 'Error',
-        description: 'Failed to update user role',
+        description: error.message || 'Failed to update user role',
         variant: 'destructive',
       })
     }
@@ -130,7 +138,7 @@ export default function AdminUsersPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">
-          <span className="text-emerald-400 neon-glow">Users</span>
+          <span className="text-theme neon-glow">Users</span>
         </h1>
         <p className="text-gray-400 mt-1">Manage customer and admin accounts</p>
       </div>
@@ -142,19 +150,19 @@ export default function AdminUsersPage() {
             placeholder="Search by username or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+            className="pl-9 bg-black/50 border-theme/20 focus:border-theme text-white"
           />
         </div>
       </div>
 
       <div className="space-y-3">
         {filteredUsers.map((user) => (
-          <Card key={user.id} className="glass border-emerald-400/10 rounded-2xl">
+          <Card key={user.id} className="glass border-theme/10 rounded-2xl">
             <CardContent className="p-4 flex items-center justify-between gap-4 flex-wrap">
               <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10 border border-emerald-400/30">
+                <Avatar className="h-10 w-10 border border-theme/30">
                   <AvatarImage src={user.avatar_url || ''} />
-                  <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-black font-bold">
+                  <AvatarFallback className="bg-gradient-to-br from-theme-500 to-green-600 text-black font-bold">
                     {user.username?.[0]?.toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>
@@ -162,7 +170,7 @@ export default function AdminUsersPage() {
                   <div className="flex items-center gap-2">
                     <p className="text-white font-medium">{user.username}</p>
                     {user.is_admin && (
-                      <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-400/20 text-emerald-400">
+                      <span className="px-2 py-0.5 rounded-full text-xs bg-theme/20 text-theme">
                         Admin
                       </span>
                     )}
@@ -175,7 +183,7 @@ export default function AdminUsersPage() {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-emerald-400/20 text-emerald-400 hover:bg-emerald-400/10"
+                  className="border-theme/20 text-theme hover:bg-theme/10"
                   onClick={() => toggleAdmin(user)}
                 >
                   {user.is_admin ? (

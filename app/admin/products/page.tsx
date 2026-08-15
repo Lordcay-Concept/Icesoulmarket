@@ -266,7 +266,7 @@ export default function AdminProductsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white">
-            <span className="text-emerald-400 neon-glow">Products</span>
+            <span className="text-theme neon-glow">Products</span>
           </h1>
           <p className="text-gray-400 mt-1">Manage your game products</p>
         </div>
@@ -290,7 +290,7 @@ export default function AdminProductsPage() {
             placeholder="Search products..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+            className="pl-9 bg-black/50 border-theme/20 focus:border-theme text-white"
           />
         </div>
         <p className="text-sm text-gray-400 whitespace-nowrap">
@@ -300,27 +300,27 @@ export default function AdminProductsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {paginatedProducts.map((product) => (
-          <Card key={product.id} className="glass border-emerald-400/10 rounded-2xl hover:border-emerald-400/30 transition-all">
+          <Card key={product.id} className="glass border-theme/10 rounded-2xl hover:border-theme/30 transition-all">
             <CardContent className="p-4">
               <div className="flex items-start gap-4">
-                <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-black/50 border border-emerald-400/10">
+                <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-black/50 border border-theme/10">
                   <Image
                     src={product.images[0] || '/images/placeholder.jpg'}
                     alt={product.name}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-white font-semibold truncate">{product.name}</h3>
                   <p className="text-sm text-gray-400">{product.category?.name || 'Uncategorized'}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-emerald-400 font-bold">${product.price}</span>
+                    <span className="text-theme font-bold">${product.price}</span>
                     <span className="text-xs text-gray-400">Stock: {product.stock_quantity}</span>
                   </div>
                   <div className="flex items-center gap-1 mt-2">
                     <span className={`px-2 py-0.5 rounded-full text-xs ${
-                      product.is_active ? 'bg-emerald-400/20 text-emerald-400' : 'bg-red-400/20 text-red-400'
+                      product.is_active ? 'bg-theme/20 text-theme' : 'bg-red-400/20 text-red-400'
                     }`}>
                       {product.is_active ? 'Active' : 'Inactive'}
                     </span>
@@ -332,11 +332,11 @@ export default function AdminProductsPage() {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2 mt-3 pt-3 border-t border-emerald-400/10">
+              <div className="flex gap-2 mt-3 pt-3 border-t border-theme/10">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1 border-emerald-400/20 text-emerald-400 hover:bg-emerald-400/10"
+                  className="flex-1 border-theme/20 text-theme hover:bg-theme/10"
                   onClick={() => openEditModal(product)}
                 >
                   <Edit className="h-3 w-3 mr-1" />
@@ -369,7 +369,7 @@ export default function AdminProductsPage() {
           <Button
             variant="outline"
             size="icon"
-            className="border-emerald-400/20"
+            className="border-theme/20"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
           >
@@ -382,8 +382,8 @@ export default function AdminProductsPage() {
               variant="ghost"
               className={`px-3 ${
                 page === currentPage
-                  ? 'bg-emerald-400/10 text-emerald-400 border border-emerald-400/30'
-                  : 'text-gray-300 hover:text-emerald-400'
+                  ? 'bg-theme/10 text-theme border border-theme/30'
+                  : 'text-gray-300 hover:text-theme'
               }`}
               onClick={() => setCurrentPage(page)}
             >
@@ -394,7 +394,7 @@ export default function AdminProductsPage() {
           <Button
             variant="outline"
             size="icon"
-            className="border-emerald-400/20"
+            className="border-theme/20"
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
           >
@@ -406,7 +406,7 @@ export default function AdminProductsPage() {
       {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="glass rounded-2xl border border-emerald-400/20 w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+          <div className="glass rounded-2xl border border-theme/20 w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-white">
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
@@ -426,7 +426,7 @@ export default function AdminProductsPage() {
                   <Input
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                    className="bg-black/50 border-theme/20 focus:border-theme text-white"
                     required
                   />
                 </div>
@@ -435,7 +435,7 @@ export default function AdminProductsPage() {
                   <select
                     value={formData.category_id}
                     onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-emerald-400/20 focus:border-emerald-400 text-white"
+                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-theme/20 focus:border-theme text-white"
                   >
                     <option value="">Select Category</option>
                     {categories.map((cat) => (
@@ -450,7 +450,7 @@ export default function AdminProductsPage() {
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-emerald-400/20 focus:border-emerald-400 text-white min-h-[100px]"
+                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-theme/20 focus:border-theme text-white min-h-[100px]"
                   required
                 />
               </div>
@@ -463,7 +463,7 @@ export default function AdminProductsPage() {
                     step="0.01"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                    className="bg-black/50 border-theme/20 focus:border-theme text-white"
                     required
                   />
                 </div>
@@ -474,7 +474,7 @@ export default function AdminProductsPage() {
                     step="0.01"
                     value={formData.discount_price}
                     onChange={(e) => setFormData({ ...formData, discount_price: e.target.value })}
-                    className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                    className="bg-black/50 border-theme/20 focus:border-theme text-white"
                   />
                 </div>
                 <div className="space-y-2">
@@ -483,7 +483,7 @@ export default function AdminProductsPage() {
                     type="number"
                     value={formData.stock_quantity}
                     onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
-                    className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                    className="bg-black/50 border-theme/20 focus:border-theme text-white"
                     required
                   />
                 </div>
@@ -496,7 +496,7 @@ export default function AdminProductsPage() {
                     placeholder="PC, PlayStation, Xbox"
                     value={formData.platform}
                     onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
-                    className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                    className="bg-black/50 border-theme/20 focus:border-theme text-white"
                   />
                 </div>
                 </div>
@@ -516,7 +516,7 @@ export default function AdminProductsPage() {
                     type="checkbox"
                     checked={formData.is_active}
                     onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                    className="rounded border-emerald-400/20 bg-black/50"
+                    className="rounded border-theme/20 bg-black/50"
                   />
                   <Label className="text-gray-300">Active</Label>
                 </div>
@@ -525,7 +525,7 @@ export default function AdminProductsPage() {
                     type="checkbox"
                     checked={formData.is_featured}
                     onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
-                    className="rounded border-emerald-400/20 bg-black/50"
+                    className="rounded border-theme/20 bg-black/50"
                   />
                   <Label className="text-gray-300">Featured</Label>
                 </div>
@@ -539,7 +539,7 @@ export default function AdminProductsPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="flex-1 border-emerald-400/20 text-white hover:bg-emerald-400/10"
+                  className="flex-1 border-theme/20 text-white hover:bg-theme/10"
                   onClick={() => setIsModalOpen(false)}
                 >
                   Cancel

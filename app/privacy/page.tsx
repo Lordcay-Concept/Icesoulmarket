@@ -8,15 +8,15 @@ export default function PrivacyPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
         <div className="container mx-auto px-4 py-12 max-w-3xl">
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-2">
-              <Shield className="h-8 w-8 text-emerald-400 neon-glow" />
+              <Shield className="h-8 w-8 text-theme neon-glow" />
               <h1 className="gaming-title text-4xl md:text-5xl">
                 Privacy Policy
               </h1>
-              <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+              <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
             </div>
             <p className="text-gray-400 text-lg">
               Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
               <p>
                 If you have any questions about this Privacy Policy or how your data is handled, please reach
                 out via our{' '}
-                <a href="/contact" className="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
+                <a href="/contact" className="text-theme hover:text-theme-300 hover:underline transition-colors">
                   Contact page
                 </a>.
               </p>

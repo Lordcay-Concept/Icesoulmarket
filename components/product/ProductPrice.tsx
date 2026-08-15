@@ -17,7 +17,7 @@ export function ProductPrice({ price, discountPrice, hasDiscount, stockQuantity 
     <div className="flex items-baseline gap-3">
       {hasDiscount ? (
         <>
-          <span className="text-4xl font-bold text-gaming-green">
+          <span className="text-4xl font-bold text-theme">
             {formatPrice(discountPrice!)}
           </span>
           <span className="text-xl text-gray-400 line-through">
@@ -25,11 +25,11 @@ export function ProductPrice({ price, discountPrice, hasDiscount, stockQuantity 
           </span>
         </>
       ) : (
-        <span className="text-4xl font-bold text-gaming-green">
+        <span className="text-4xl font-bold text-theme">
           {formatPrice(price)}
         </span>
       )}
-      <Badge variant="outline" className="border-gaming-green/30">
+      <Badge variant="outline" className="border-theme/30">
         {stockQuantity > 0 ? 'In Stock' : 'Out of Stock'}
       </Badge>
     </div>

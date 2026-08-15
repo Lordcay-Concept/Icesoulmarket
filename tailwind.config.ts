@@ -1,4 +1,3 @@
-// tailwind.config.ts
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
@@ -52,11 +51,11 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Gaming theme colors
+        // ✅ KEEP: Gaming theme colors for fallback
         gaming: {
-          green: '#00ff41',
-          'green-dark': '#00cc33',
-          'green-glow': 'rgba(0, 255, 65, 0.15)',
+          green: 'var(--theme-primary)',
+          'green-dark': 'var(--theme-secondary)',
+          'green-glow': 'color-mix(in srgb, var(--theme-glow) 15%, transparent)',
           black: '#0a0a0a',
           'black-light': '#1a1a1a',
           'black-lighter': '#2a2a2a',
@@ -77,10 +76,14 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        // Gaming animations
+        // ✅ Gaming animations - keep these for effects
         "pulse-glow": {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(0, 255, 65, 0.3)' },
-          '50%': { boxShadow: '0 0 40px rgba(0, 255, 65, 0.6)' },
+          '0%, 100%': { 
+            boxShadow: '0 0 20px color-mix(in srgb, var(--theme-glow) 30%, transparent)' 
+          },
+          '50%': { 
+            boxShadow: '0 0 40px color-mix(in srgb, var(--theme-glow) 60%, transparent)' 
+          },
         },
         "float": {
           '0%, 100%': { transform: 'translateY(0px)' },
@@ -107,9 +110,17 @@ const config: Config = {
         "glitch": "glitch 0.3s ease-in-out infinite",
         "scanline": "scanline 8s linear infinite",
       },
+      // ✅ Updated backgroundImage to use theme variables
       backgroundImage: {
         'gaming-gradient': 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
-        'neon-glow': 'radial-gradient(circle at 50% 50%, rgba(0, 255, 65, 0.1) 0%, transparent 70%)',
+        'neon-glow': 'radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--theme-glow) 10%, transparent) 0%, transparent 70%)',
+      },
+      // ✅ Added theme-aware box shadows
+      boxShadow: {
+        'theme-glow': '0 0 30px color-mix(in srgb, var(--theme-glow) 100%, transparent)',
+        'theme-glow-sm': '0 0 15px color-mix(in srgb, var(--theme-glow) 100%, transparent)',
+        'theme-glow-lg': '0 0 50px color-mix(in srgb, var(--theme-glow) 100%, transparent)',
+        'theme-glow-xl': '0 0 70px color-mix(in srgb, var(--theme-glow) 100%, transparent)',
       },
     },
   },

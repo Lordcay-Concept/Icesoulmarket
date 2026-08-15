@@ -95,7 +95,7 @@ export function ReviewList({ reviews, currentUserId }: ReviewListProps) {
           <div 
             key={review.id} 
             className={`p-4 rounded-lg bg-black-light border ${
-              isEditing ? 'border-emerald-400/40' : 'border-emerald-400/10'
+              isEditing ? 'border-theme/40' : 'border-theme/10'
             } transition-all`}
           >
             {isEditing ? (
@@ -127,7 +127,7 @@ export function ReviewList({ reviews, currentUserId }: ReviewListProps) {
                       <Star
                         className={`h-6 w-6 transition-colors ${
                           star <= (hoverRating || editRating)
-                            ? 'fill-emerald-400 text-emerald-400'
+                            ? 'fill-theme text-theme'
                             : 'text-gray-600'
                         }`}
                       />
@@ -139,13 +139,13 @@ export function ReviewList({ reviews, currentUserId }: ReviewListProps) {
                   value={editComment}
                   onChange={(e) => setEditComment(e.target.value)}
                   placeholder="Update your review..."
-                  className="w-full px-3 py-2 rounded-lg bg-black/50 border border-emerald-400/20 focus:border-emerald-400 text-white min-h-[80px]"
+                  className="w-full px-3 py-2 rounded-lg bg-black/50 border border-theme/20 focus:border-theme text-white min-h-[80px]"
                 />
 
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    className="bg-emerald-400 text-black hover:bg-emerald-400/80"
+                    className="bg-theme text-black hover:bg-theme/80"
                     onClick={() => handleUpdateReview(review.id)}
                     disabled={isSubmitting || editRating === 0}
                   >
@@ -178,7 +178,7 @@ export function ReviewList({ reviews, currentUserId }: ReviewListProps) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-emerald-400 h-6 px-2"
+                        className="text-gray-400 hover:text-theme h-6 px-2"
                         onClick={() => startEditing(review)}
                       >
                         <Edit className="h-3 w-3" />
@@ -191,7 +191,7 @@ export function ReviewList({ reviews, currentUserId }: ReviewListProps) {
                     <Star
                       key={i}
                       className={`h-4 w-4 ${
-                        i < review.rating ? 'fill-emerald-400 text-emerald-400' : 'text-gray-600'
+                        i < review.rating ? 'fill-theme text-theme' : 'text-gray-600'
                       }`}
                     />
                   ))}

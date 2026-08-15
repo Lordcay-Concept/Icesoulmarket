@@ -86,7 +86,7 @@ export default function AccountSettingsPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10 flex items-center justify-center">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10 flex items-center justify-center">
           <div className="text-gray-400">Loading...</div>
         </main>
       </>
@@ -101,18 +101,18 @@ export default function AccountSettingsPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-md mx-auto">
-            <Link href="/account" className="flex items-center gap-2 text-gray-400 hover:text-emerald-400 transition-colors mb-6">
+            <Link href="/account" className="flex items-center gap-2 text-gray-400 hover:text-theme transition-colors mb-6">
               <ArrowLeft className="h-4 w-4" />
               Back to Profile
             </Link>
 
-            <Card className="glass border-emerald-400/20 rounded-2xl">
+            <Card className="glass border-theme-20 rounded-2xl">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <Lock className="h-5 w-5 text-emerald-400" />
+                  <Lock className="h-5 w-5 text-theme" />
                   Change Password
                 </CardTitle>
               </CardHeader>
@@ -121,11 +121,11 @@ export default function AccountSettingsPage() {
                   <div className="space-y-2">
                     <Label className="text-gray-300">New Password</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme" />
                       <Input
                         type={showNewPassword ? 'text' : 'password'}
                         placeholder="Enter new password"
-                        className="pl-9 pr-10 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                        className="pl-9 pr-10 bg-black/50 border-theme-20 focus:border-theme text-white"
                         value={formData.newPassword}
                         onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
                         required
@@ -143,11 +143,11 @@ export default function AccountSettingsPage() {
                   <div className="space-y-2">
                     <Label className="text-gray-300">Confirm Password</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme" />
                       <Input
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder="Confirm new password"
-                        className="pl-9 pr-10 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                        className="pl-9 pr-10 bg-black/50 border-theme-20 focus:border-theme text-white"
                         value={formData.confirmPassword}
                         onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                         required

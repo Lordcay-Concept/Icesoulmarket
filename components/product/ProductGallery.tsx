@@ -76,7 +76,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   return (
     <div className="space-y-3">
       {/* Main image area */}
-      <div className="relative aspect-square rounded-lg overflow-hidden bg-black-light border border-emerald-400/20">
+      <div className="relative aspect-square rounded-lg overflow-hidden bg-black-light border border-theme/20">
         <div
           ref={scrollRef}
           onScroll={handleScroll}
@@ -98,7 +98,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 src={image}
                 alt={`${productName} - Image ${index + 1}`}
                 fill
-                className="object-cover"
+                className="object-contain"
                 priority={index === 0}
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
@@ -140,7 +140,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 key={index}
                 onClick={() => scrollToIndex(index)}
                 className={`h-1.5 rounded-full transition-all ${
-                  index === activeIndex ? 'w-6 bg-emerald-400' : 'w-1.5 bg-white/40 hover:bg-white/60'
+                  index === activeIndex ? 'w-6 bg-theme' : 'w-1.5 bg-white/40 hover:bg-white/60'
                 }`}
                 aria-label={`Go to image ${index + 1}`}
               />
@@ -155,15 +155,15 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
       </div>
 
       {/* ✅ Thumbnail row - always shown, scrollable */}
-      <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-emerald-400/30 [&::-webkit-scrollbar-thumb]:rounded-full">
+      <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-theme/30 [&::-webkit-scrollbar-thumb]:rounded-full">
         {displayImages.map((image, index) => (
           <button
             key={index}
             onClick={() => scrollToIndex(index)}
             className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
               index === activeIndex
-                ? 'border-emerald-400'
-                : 'border-emerald-400/10 opacity-60 hover:opacity-100'
+                ? 'border-theme'
+                : 'border-theme/10 opacity-60 hover:opacity-100'
             }`}
             aria-label={`View image ${index + 1}`}
           >
@@ -171,7 +171,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               src={image} 
               alt={`Thumbnail ${index + 1}`} 
               fill 
-              className="object-cover" 
+              className="object-contain" 
               sizes="64px"
             />
           </button>

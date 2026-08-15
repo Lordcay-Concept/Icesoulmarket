@@ -43,15 +43,15 @@ export default function FAQPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
         <div className="container mx-auto px-4 py-12 max-w-3xl">
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-2">
-              <HelpCircle className="h-8 w-8 text-emerald-400 neon-glow" />
+              <HelpCircle className="h-8 w-8 text-theme neon-glow" />
               <h1 className="gaming-title text-4xl md:text-5xl">
                 Frequently Asked Questions
               </h1>
-              <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+              <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
             </div>
             <p className="text-gray-400 text-lg">
               Everything you need to know before you buy
@@ -62,10 +62,10 @@ export default function FAQPage() {
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="p-6 rounded-xl glass border border-emerald-400/10 hover:border-emerald-400/20 transition-all"
+                className="p-6 rounded-xl glass border border-theme/10 hover:border-theme/20 transition-all"
               >
                 <h3 className="text-lg font-semibold text-white mb-2 flex items-start gap-2">
-                  <Gamepad2 className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <Gamepad2 className="h-5 w-5 text-theme flex-shrink-0 mt-0.5" />
                   {faq.question}
                 </h3>
                 <p className="text-gray-400 leading-relaxed pl-7">
@@ -75,10 +75,10 @@ export default function FAQPage() {
             ))}
           </div>
 
-          <div className="mt-10 p-6 rounded-xl bg-emerald-400/5 border border-emerald-400/20 text-center">
+          <div className="mt-10 p-6 rounded-xl bg-theme/5 border border-theme/20 text-center">
             <p className="text-gray-300">
               Still have questions?{' '}
-              <a href="/contact" className="text-emerald-400 hover:text-emerald-300 font-medium hover:underline transition-colors">
+              <a href="/contact" className="text-theme hover:text-theme-300 font-medium hover:underline transition-colors">
                 Get in touch with us
               </a>
             </p>

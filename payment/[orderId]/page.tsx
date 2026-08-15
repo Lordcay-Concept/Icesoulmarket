@@ -208,7 +208,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
         <Navbar />
         <main className="container mx-auto px-4 py-24">
           <div className="flex items-center justify-center h-96">
-            <Loader2 className="h-8 w-8 animate-spin text-gaming-green" />
+            <Loader2 className="h-8 w-8 animate-spin text-theme" />
           </div>
         </main>
       </>
@@ -226,7 +226,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
               <h2 className="text-xl font-bold text-white mb-2">Error</h2>
               <p className="text-gray-400">{error}</p>
               <Button 
-                className="mt-4 bg-gaming-green text-black hover:bg-gaming-green/80"
+                className="mt-4 bg-theme text-black hover:bg-theme/80"
                 onClick={() => router.push('/account/orders')}
               >
                 View My Orders
@@ -257,7 +257,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
       <main className="container mx-auto px-4 py-24">
         <div className="max-w-3xl mx-auto">
           <div className="mb-6">
-            <Link href="/account/orders" className="text-gaming-green hover:underline flex items-center gap-2">
+            <Link href="/account/orders" className="text-theme hover:underline flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               Back to Orders
             </Link>
@@ -265,7 +265,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
 
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-white">
-              Complete <span className="text-gaming-green">Payment</span>
+              Complete <span className="text-theme">Payment</span>
             </h1>
             <p className="text-gray-400 mt-1">
               Order #{order.order_number} • Total: ${order.total_amount.toFixed(2)}
@@ -277,7 +277,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
             <Card className="gaming-card">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-gaming-green" />
+                  <Clock className="h-5 w-5 text-theme" />
                   Order Status
                 </CardTitle>
               </CardHeader>
@@ -293,23 +293,23 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
             </Card>
 
             {/* Bank Details */}
-            <Card className="gaming-card border-gaming-green/30">
+            <Card className="gaming-card border-theme/30">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <Banknote className="h-5 w-5 text-gaming-green" />
+                  <Banknote className="h-5 w-5 text-theme" />
                   Bank Transfer Details
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-lg bg-black-light/50 border border-gaming-green/10">
+                  <div className="p-4 rounded-lg bg-black-light/50 border border-theme/10">
                     <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
                       <Building2 className="h-4 w-4" />
                       Bank
                     </div>
                     <p className="text-white font-semibold">{bankDetails.bank_name}</p>
                   </div>
-                  <div className="p-4 rounded-lg bg-black-light/50 border border-gaming-green/10">
+                  <div className="p-4 rounded-lg bg-black-light/50 border border-theme/10">
                     <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
                       <User className="h-4 w-4" />
                       Account Name
@@ -318,20 +318,20 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-gaming-green/5 border border-gaming-green/20">
+                <div className="p-4 rounded-lg bg-theme/5 border border-theme/20">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <Hash className="h-4 w-4" />
                         Account Number
                       </div>
-                      <p className="text-2xl font-bold text-gaming-green font-mono tracking-wider">
+                      <p className="text-2xl font-bold text-theme font-mono tracking-wider">
                         {bankDetails.account_number}
                       </p>
                     </div>
                     <Button
                       variant="outline"
-                      className="border-gaming-green/30 text-gaming-green hover:bg-gaming-green/10"
+                      className="border-theme/30 text-theme hover:bg-theme/10"
                       onClick={() => handleCopy(bankDetails.account_number)}
                     >
                       {copied ? (
@@ -344,13 +344,13 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-black-light/50 border border-gaming-green/10">
+                <div className="p-4 rounded-lg bg-black-light/50 border border-theme/10">
                   <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
                     <FileText className="h-4 w-4" />
                     Instructions
                   </div>
                   <p className="text-gray-300 text-sm">{bankDetails.instructions}</p>
-                  <p className="text-gaming-green text-sm mt-2">
+                  <p className="text-theme text-sm mt-2">
                     <strong>Important:</strong> Use your order number #{order.order_number} as reference.
                   </p>
                 </div>
@@ -382,7 +382,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
                   <Input
                     id="reference"
                     placeholder="e.g., TRF-2024-001234"
-                    className="bg-black-light border-gaming-green/20 focus:border-gaming-green"
+                    className="bg-black-light border-theme/20 focus:border-theme"
                     value={transferReference}
                     onChange={(e) => setTransferReference(e.target.value)}
                     required
@@ -390,7 +390,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
                 </div>
 
                 <Button
-                  className="w-full bg-gaming-green text-black hover:bg-gaming-green/80 text-lg py-6"
+                  className="w-full bg-theme text-black hover:bg-theme/80 text-lg py-6"
                   onClick={handleConfirmPayment}
                   disabled={isSubmitting || !transferReference.trim()}
                 >
@@ -423,13 +423,13 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
                 <div className="space-y-2">
                   <div className="flex justify-between text-gray-300">
                     <span>Order Number</span>
-                    <span className="font-mono text-gaming-green">#{order.order_number}</span>
+                    <span className="font-mono text-theme">#{order.order_number}</span>
                   </div>
                   <div className="flex justify-between text-gray-300">
                     <span>Total Amount</span>
                     <span className="font-bold text-white">${order.total_amount.toFixed(2)}</span>
                   </div>
-                  <Separator className="bg-gaming-green/20" />
+                  <Separator className="bg-theme/20" />
                   <div className="flex justify-between text-gray-300">
                     <span>Payment Method</span>
                     <span className="text-white">Bank Transfer</span>

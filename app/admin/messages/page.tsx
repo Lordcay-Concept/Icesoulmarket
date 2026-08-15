@@ -120,7 +120,7 @@ export default function AdminMessagesPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">
-          <span className="text-emerald-400 neon-glow">Messages</span>
+          <span className="text-theme neon-glow">Messages</span>
         </h1>
         <p className="text-gray-400 mt-1">View and manage customer messages</p>
       </div>
@@ -132,7 +132,7 @@ export default function AdminMessagesPage() {
             placeholder="Search messages..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+            className="pl-9 bg-black/50 border-theme/20 focus:border-theme text-white"
           />
         </div>
       </div>
@@ -145,27 +145,27 @@ export default function AdminMessagesPage() {
           return (
             <Card 
               key={message.id} 
-              className={`glass border-emerald-400/10 rounded-2xl hover:border-emerald-400/30 transition-all overflow-hidden ${
-                isUnread ? 'border-l-4 border-l-emerald-400' : ''
+              className={`glass border-theme/10 rounded-2xl hover:border-theme/30 transition-all overflow-hidden ${
+                isUnread ? 'border-l-4 border-l-theme' : ''
               }`}
             >
               {/* Message Header - Always visible */}
               <div 
-                className="p-5 cursor-pointer hover:bg-emerald-400/5 transition-colors"
+                className="p-5 cursor-pointer hover:bg-theme/5 transition-colors"
                 onClick={() => toggleMessageExpand(message.id)}
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 flex-wrap">
-                      <div className="p-2 rounded-xl bg-emerald-400/10">
-                        <Mail className="h-4 w-4 text-emerald-400" />
+                      <div className="p-2 rounded-xl bg-theme/10">
+                        <Mail className="h-4 w-4 text-theme" />
                       </div>
                       <div>
                         <p className="text-white font-medium">{message.name}</p>
                         <p className="text-sm text-gray-400">{message.email}</p>
                       </div>
                       {isUnread && (
-                        <Badge className="bg-emerald-400/20 text-emerald-400 border-emerald-500/30 text-xs">
+                        <Badge className="bg-theme/20 text-theme border-theme-500/30 text-xs">
                           New
                         </Badge>
                       )}
@@ -177,7 +177,7 @@ export default function AdminMessagesPage() {
                         {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       <span className="text-gray-600">•</span>
-                      <span className={isUnread ? 'text-emerald-400' : ''}>
+                      <span className={isUnread ? 'text-theme' : ''}>
                         {isUnread ? 'Unread' : 'Read'}
                       </span>
                     </div>
@@ -187,7 +187,7 @@ export default function AdminMessagesPage() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10"
+                        className="text-theme hover:text-theme-300 hover:bg-theme/10"
                         onClick={(e) => {
                           e.stopPropagation()
                           handleMarkRead(message.id)
@@ -208,7 +208,7 @@ export default function AdminMessagesPage() {
                       <Trash2 className="h-4 w-4" />
                     </Button>
                     <button 
-                      className="p-1.5 rounded-full hover:bg-emerald-400/10 transition-colors text-gray-400 hover:text-white"
+                      className="p-1.5 rounded-full hover:bg-theme/10 transition-colors text-gray-400 hover:text-white"
                       onClick={(e) => {
                         e.stopPropagation()
                         toggleMessageExpand(message.id)
@@ -234,11 +234,11 @@ export default function AdminMessagesPage() {
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
-                    <Separator className="bg-emerald-400/10" />
+                    <Separator className="bg-theme/10" />
                     <div className="p-5 space-y-4">
                       {/* Sender Info */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                        <div className="bg-black/30 rounded-xl p-4 border border-theme/10">
                           <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
                             <User className="h-4 w-4" />
                             Sender Information
@@ -250,7 +250,7 @@ export default function AdminMessagesPage() {
                             {message.email}
                           </p>
                         </div>
-                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                        <div className="bg-black/30 rounded-xl p-4 border border-theme/10">
                           <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
                             <Calendar className="h-4 w-4" />
                             Message Details
@@ -259,7 +259,7 @@ export default function AdminMessagesPage() {
                             Subject: <span className="text-sm text-gray-400">{message.subject}</span>
                           </p>
                           <p className="text-white">
-                            Status: <span className={`text-sm ${isUnread ? 'text-emerald-400' : 'text-gray-400'}`}>
+                            Status: <span className={`text-sm ${isUnread ? 'text-theme' : 'text-gray-400'}`}>
                               {isUnread ? 'Unread' : 'Read'}
                             </span>
                           </p>
@@ -272,7 +272,7 @@ export default function AdminMessagesPage() {
                       </div>
 
                       {/* Message Content */}
-                      <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                      <div className="bg-black/30 rounded-xl p-4 border border-theme/10">
                         <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
                           <MessageSquare className="h-4 w-4" />
                           Message Content
@@ -287,7 +287,7 @@ export default function AdminMessagesPage() {
                         {isUnread && (
                           <Button
                             size="sm"
-                            className="bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
+                            className="bg-theme/10 text-theme hover:bg-theme/20"
                             onClick={() => handleMarkRead(message.id)}
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />

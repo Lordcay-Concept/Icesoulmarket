@@ -37,7 +37,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
         className={`p-2 rounded-lg border transition-all ${
           currentPage === 1
             ? 'border-gray-700 text-gray-600 pointer-events-none'
-            : 'border-emerald-400/20 text-gray-300 hover:border-emerald-400/40 hover:text-emerald-400'
+            : 'border-theme/20 text-gray-300 hover:border-theme/40 hover:text-theme'
         }`}
         aria-disabled={currentPage === 1}
       >
@@ -46,7 +46,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
 
       {getPageNumbers()[0] > 1 && (
         <>
-          <Link href={buildUrl(1)} className="px-3 py-2 rounded-lg text-sm text-gray-300 hover:text-emerald-400 transition-colors">
+          <Link href={buildUrl(1)} className="px-3 py-2 rounded-lg text-sm text-gray-300 hover:text-theme transition-colors">
             1
           </Link>
           {getPageNumbers()[0] > 2 && <span className="text-gray-600">…</span>}
@@ -59,8 +59,8 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
           href={buildUrl(page)}
           className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
             page === currentPage
-              ? 'bg-emerald-400/10 text-emerald-400 border border-emerald-400/30'
-              : 'text-gray-300 hover:text-emerald-400'
+              ? 'bg-theme/10 text-theme border border-theme/30'
+              : 'text-gray-300 hover:text-theme'
           }`}
         >
           {page}
@@ -72,7 +72,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
           {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1 && (
             <span className="text-gray-600">…</span>
           )}
-          <Link href={buildUrl(totalPages)} className="px-3 py-2 rounded-lg text-sm text-gray-300 hover:text-emerald-400 transition-colors">
+          <Link href={buildUrl(totalPages)} className="px-3 py-2 rounded-lg text-sm text-gray-300 hover:text-theme transition-colors">
             {totalPages}
           </Link>
         </>
@@ -83,7 +83,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
         className={`p-2 rounded-lg border transition-all ${
           currentPage === totalPages
             ? 'border-gray-700 text-gray-600 pointer-events-none'
-            : 'border-emerald-400/20 text-gray-300 hover:border-emerald-400/40 hover:text-emerald-400'
+            : 'border-theme/20 text-gray-300 hover:border-theme/40 hover:text-theme'
         }`}
         aria-disabled={currentPage === totalPages}
       >

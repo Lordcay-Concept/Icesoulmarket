@@ -81,15 +81,15 @@ export default function ChangePasswordPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">
-          <span className="text-emerald-400 neon-glow">Change Password</span>
+          <span className="text-theme neon-glow">Change Password</span>
         </h1>
         <p className="text-gray-400 mt-1">Update your admin password</p>
       </div>
 
-      <Card className="glass border-emerald-400/10 rounded-2xl max-w-md">
+      <Card className="glass border-theme/10 rounded-2xl max-w-md">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
-            <Lock className="h-5 w-5 text-emerald-400" />
+            <Lock className="h-5 w-5 text-theme" />
             Change Password
           </CardTitle>
         </CardHeader>
@@ -98,11 +98,11 @@ export default function ChangePasswordPage() {
             <div className="space-y-2">
               <Label className="text-gray-300">Current Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme" />
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter current password"
-                  className="pl-9 pr-10 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                  className="pl-9 pr-10 bg-black/50 border-theme/20 focus:border-theme text-white"
                   value={formData.currentPassword}
                   onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
                   required
@@ -120,11 +120,11 @@ export default function ChangePasswordPage() {
             <div className="space-y-2">
               <Label className="text-gray-300">New Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme" />
                 <Input
                   type={showNewPassword ? 'text' : 'password'}
                   placeholder="Enter new password"
-                  className="pl-9 pr-10 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                  className="pl-9 pr-10 bg-black/50 border-theme/20 focus:border-theme text-white"
                   value={formData.newPassword}
                   onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
                   required
@@ -142,11 +142,11 @@ export default function ChangePasswordPage() {
             <div className="space-y-2">
               <Label className="text-gray-300">Confirm Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme" />
                 <Input
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Confirm new password"
-                  className="pl-9 pr-10 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+                  className="pl-9 pr-10 bg-black/50 border-theme/20 focus:border-theme text-white"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                   required

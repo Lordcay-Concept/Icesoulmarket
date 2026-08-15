@@ -49,13 +49,13 @@ const getStatusConfig = (status: OrderStatus) => {
     case 'pending_verification':
       return { color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', icon: Clock, label: 'Awaiting Approval', spin: false }
     case 'payment_approved':
-      return { color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', icon: CheckCircle, label: 'Order Confirmed', spin: false }
+      return { color: 'bg-theme-500/20 text-theme border-theme-30', icon: CheckCircle, label: 'Order Confirmed', spin: false }
     case 'payment_rejected':
       return { color: 'bg-red-500/20 text-red-400 border-red-500/30', icon: AlertCircle, label: 'Payment Issue', spin: false }
     case 'processing':
       return { color: 'bg-blue-500/20 text-blue-400 border-blue-500/30', icon: Loader2, label: 'Processing', spin: true }
     case 'completed':
-      return { color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', icon: CheckCircle, label: 'Completed', spin: false }
+      return { color: 'bg-theme-500/20 text-theme border-theme-30', icon: CheckCircle, label: 'Completed', spin: false }
     case 'cancelled':
       return { color: 'bg-red-500/20 text-red-400 border-red-500/30', icon: XCircle, label: 'Cancelled', spin: false }
     case 'refunded':
@@ -117,7 +117,7 @@ export default function OrdersPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10 flex items-center justify-center">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10 flex items-center justify-center">
           <div className="text-gray-400">Loading orders...</div>
         </main>
       </>
@@ -131,7 +131,7 @@ export default function OrdersPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
         <div className="container mx-auto px-4 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -140,15 +140,15 @@ export default function OrdersPage() {
           >
             {/* Header */}
             <div className="flex items-center gap-4 mb-8">
-              <Link href="/account" className="p-2 rounded-xl glass border border-emerald-400/20 hover:border-emerald-400/40 transition-all">
+              <Link href="/account" className="p-2 rounded-xl glass border border-theme-20 hover:border-theme-40 transition-all">
                 <ArrowLeft className="h-5 w-5 text-gray-400 hover:text-white transition-colors" />
               </Link>
               <div className="flex items-center gap-3">
-                <Gamepad2 className="h-8 w-8 text-emerald-400 neon-glow" />
+                <Gamepad2 className="h-8 w-8 text-theme neon-glow" />
                 <h1 className="text-4xl font-bold text-white">
-                  My <span className="text-emerald-400 neon-glow">Orders</span>
+                  My <span className="text-theme neon-glow">Orders</span>
                 </h1>
-                <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+                <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
               </div>
               {orders.length > 0 && (
                 <span className="ml-auto text-sm text-gray-400">
@@ -158,7 +158,7 @@ export default function OrdersPage() {
             </div>
 
             {orders.length === 0 ? (
-              <Card className="glass border-emerald-400/20 rounded-2xl">
+              <Card className="glass border-theme-20 rounded-2xl">
                 <CardContent className="py-16 text-center">
                   <Package className="h-16 w-16 text-gray-600 mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-white mb-2">No Orders Yet</h3>
@@ -184,10 +184,10 @@ export default function OrdersPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
                     >
-                      <Card className="glass border-emerald-400/20 rounded-2xl hover:border-emerald-400/40 transition-all overflow-hidden">
+                      <Card className="glass border-theme-20 rounded-2xl hover:border-theme-40 transition-all overflow-hidden">
                         {/* Order Header - Always visible */}
                         <div 
-                          className="p-5 cursor-pointer hover:bg-emerald-400/5 transition-colors"
+                          className="p-5 cursor-pointer hover:bg-theme-5 transition-colors"
                           onClick={() => toggleOrderExpand(order.id)}
                         >
                           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -215,12 +215,12 @@ export default function OrdersPage() {
                             <div className="flex items-center gap-4">
                               <div className="text-right">
                                 <div className="text-sm text-gray-400">Total</div>
-                                <div className="text-lg font-bold text-emerald-400 neon-glow">
+                                <div className="text-lg font-bold text-theme neon-glow">
                                   {formatPrice(order.total_amount)}
                                 </div>
                               </div>
                               <button 
-                                className="p-1.5 rounded-full hover:bg-emerald-400/10 transition-colors text-gray-400 hover:text-white"
+                                className="p-1.5 rounded-full hover:bg-theme-10 transition-colors text-gray-400 hover:text-white"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   toggleOrderExpand(order.id)
@@ -246,14 +246,14 @@ export default function OrdersPage() {
                               transition={{ duration: 0.3, ease: 'easeInOut' }}
                               className="overflow-hidden"
                             >
-                              <Separator className="bg-emerald-400/10" />
+                              <Separator className="bg-theme-10" />
                               <div className="p-5 space-y-4">
                                 {/* Items List */}
                                 <div>
                                   <h4 className="text-sm font-medium text-gray-400 mb-3">Order Items</h4>
                                   <div className="space-y-2 bg-black/30 rounded-xl p-3">
                                     {order.order_items?.map((item, idx) => (
-                                      <div key={idx} className="flex justify-between items-center text-sm py-1.5 border-b border-emerald-400/5 last:border-0">
+                                      <div key={idx} className="flex justify-between items-center text-sm py-1.5 border-b border-theme-5 last:border-0">
                                         <div className="flex items-center gap-3">
                                           <span className="text-gray-300">
                                             {item.product_name}
@@ -269,19 +269,19 @@ export default function OrdersPage() {
                                 </div>
 
                                 {/* Order Summary */}
-                                <div className="bg-emerald-400/5 rounded-xl p-4 border border-emerald-400/10">
+                                <div className="bg-theme-5 rounded-xl p-4 border border-theme-10">
                                   <div className="flex justify-between text-sm">
                                     <span className="text-gray-400">Subtotal</span>
                                     <span className="text-white">{formatPrice(order.total_amount)}</span>
                                   </div>
                                   <div className="flex justify-between text-sm mt-1">
                                     <span className="text-gray-400">Shipping</span>
-                                    <span className="text-emerald-400">Free</span>
+                                    <span className="text-theme">Free</span>
                                   </div>
-                                  <Separator className="my-2 bg-emerald-400/10" />
+                                  <Separator className="my-2 bg-theme-10" />
                                   <div className="flex justify-between font-bold">
                                     <span className="text-white">Total</span>
-                                    <span className="text-emerald-400 neon-glow">{formatPrice(order.total_amount)}</span>
+                                    <span className="text-theme neon-glow">{formatPrice(order.total_amount)}</span>
                                   </div>
                                 </div>
 

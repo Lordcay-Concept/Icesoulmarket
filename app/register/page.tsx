@@ -83,13 +83,13 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-emerald-950/30" />
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-theme-950/30" />
       <div className="absolute inset-0 grid-overlay opacity-20" />
       <div className="absolute inset-0 scanline" />
       
       {/* Floating Orbs */}
       <motion.div
-        className="absolute top-20 right-20 w-72 h-72 rounded-full bg-emerald-500/10 blur-3xl"
+        className="absolute top-20 right-20 w-72 h-72 rounded-full bg-theme-500/10 blur-3xl"
         animate={{ 
           x: [0, -100, 0],
           y: [0, 50, 0],
@@ -97,7 +97,7 @@ export default function RegisterPage() {
         transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
       />
       <motion.div
-        className="absolute bottom-20 left-20 w-80 h-80 rounded-full bg-emerald-400/5 blur-3xl"
+        className="absolute bottom-20 left-20 w-80 h-80 rounded-full bg-theme/5 blur-3xl"
         animate={{ 
           x: [0, 100, 0],
           y: [0, -50, 0],
@@ -109,7 +109,7 @@ export default function RegisterPage() {
       {[...Array(30)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute h-1 w-1 rounded-full bg-emerald-400/20"
+          className="absolute h-1 w-1 rounded-full bg-theme/20"
           initial={{
             x: Math.random() * 100 + '%',
             y: Math.random() * 100 + '%',
@@ -136,22 +136,22 @@ export default function RegisterPage() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="glass rounded-2xl border border-emerald-400/20 shadow-2xl shadow-emerald-400/5 p-8">
+        <div className="glass rounded-2xl border border-theme/20 shadow-2xl shadow-theme/5 p-8">
           {/* Logo & Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="relative">
-                <Gamepad2 className="h-10 w-10 text-emerald-400 neon-glow" />
-                <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-emerald-300 animate-pulse" />
+                <Gamepad2 className="h-10 w-10 text-theme neon-glow" />
+                <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-theme-300 animate-pulse" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">Icesoul<span className="text-emerald-400 neon-glow">Market</span></h1>
+                <h1 className="text-2xl font-bold text-white">Icesoul<span className="text-theme neon-glow">Market</span></h1>
                 <p className="text-xs text-gray-500">Premium Gaming Store</p>
               </div>
             </div>
             
             <h2 className="text-2xl font-bold text-white mt-4">
-              Join the <span className="text-emerald-400 neon-glow">Gaming</span> Community
+              Join the <span className="text-theme neon-glow">Gaming</span> Community
             </h2>
             <p className="text-gray-400 text-sm mt-1">Create your account and start your journey</p>
           </div>
@@ -161,11 +161,11 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="username" className="text-gray-300 text-sm font-medium">Gamer Tag</Label>
               <div className="relative group">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400 group-focus-within:text-emerald-300 transition-colors" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme group-focus-within:text-theme-300 transition-colors" />
                 <Input
                   id="username"
                   placeholder="GamerName"
-                  className="pl-10 bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
+                  className="pl-10 bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   required
@@ -176,12 +176,12 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="email" className="text-gray-300 text-sm font-medium">Email Address</Label>
               <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400 group-focus-within:text-emerald-300 transition-colors" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme group-focus-within:text-theme-300 transition-colors" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="you@example.com"
-                  className="pl-10 bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
+                  className="pl-10 bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
@@ -192,12 +192,12 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="password" className="text-gray-300 text-sm font-medium">Password</Label>
               <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400 group-focus-within:text-emerald-300 transition-colors" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme group-focus-within:text-theme-300 transition-colors" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Minimum 6 characters"
-                  className="pl-10 pr-12 bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
+                  className="pl-10 pr-12 bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required
@@ -215,12 +215,12 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="confirmPassword" className="text-gray-300 text-sm font-medium">Confirm Password</Label>
               <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400 group-focus-within:text-emerald-300 transition-colors" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme group-focus-within:text-theme-300 transition-colors" />
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Confirm your password"
-                  className="pl-10 pr-12 bg-black/50 border-emerald-400/20 focus:border-emerald-400 focus:ring-emerald-400/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
+                  className="pl-10 pr-12 bg-black/50 border-theme/20 focus:border-theme focus:ring-theme/20 text-white placeholder:text-gray-500 h-12 rounded-xl transition-all"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                   required
@@ -258,7 +258,7 @@ export default function RegisterPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-400">
               Already have an account?{' '}
-              <Link href="/login" className="text-emerald-400 hover:text-emerald-300 font-medium hover:underline transition-colors">
+              <Link href="/login" className="text-theme hover:text-theme-300 font-medium hover:underline transition-colors">
                 Login
               </Link>
             </p>

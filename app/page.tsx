@@ -51,15 +51,15 @@ export default async function Home() {
         <Hero />
         
         {/* Stats Section */}
-        <section className="py-12 bg-gradient-to-b from-transparent via-black to-black border-t border-emerald-400/5">
+        <section className="py-12 bg-gradient-to-b from-transparent via-black to-black border-t border-theme/5">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((stat, index) => (
                 <div 
                   key={index}
-                  className="glass rounded-xl p-6 text-center border border-emerald-400/10 hover:border-emerald-400/30 transition-all hover:scale-105"
+                  className="glass rounded-xl p-6 text-center border border-theme/10 hover:border-theme/30 transition-all hover:scale-105"
                 >
-                  <stat.icon className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
+                  <stat.icon className="h-8 w-8 text-theme mx-auto mb-2" />
                   <div className="text-2xl font-bold text-white neon-glow">{stat.value}</div>
                   <div className="text-sm text-gray-400">{stat.label}</div>
                 </div>
@@ -69,20 +69,20 @@ export default async function Home() {
         </section>
         
         {/* Featured Products */}
-        <section className="py-16 bg-gradient-to-b from-black via-black/95 to-emerald-950/5">
+        <section className="py-16 bg-gradient-to-b from-black via-black/95 to-theme-950/5">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <Crown className="h-6 w-6 text-emerald-400" />
+                  <Crown className="h-6 w-6 text-theme" />
                   <h2 className="text-3xl font-bold text-white">
-                    <span className="text-emerald-400 neon-glow">Featured</span> Items
+                    <span className="text-theme neon-glow">Featured</span> Items
                   </h2>
                 </div>
                 <p className="text-gray-400">Handpicked premium Call of Duty products for elite gamers</p>
               </div>
               <Link href="/products">
-                <Button variant="ghost" className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10 group">
+                <Button variant="ghost" className="text-theme hover:text-theme-300 hover:bg-theme/10 group">
                   View All
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -93,13 +93,13 @@ export default async function Home() {
         </section>
         
         {/* Categories Section - Now with proper context */}
-         <section className="py-16 bg-gradient-to-b from-emerald-950/5 via-black to-black border-t border-emerald-400/10">
+         <section className="py-16 bg-gradient-to-b from-theme-950/5 via-black to-black border-t border-theme/10">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <div className="flex items-center justify-center gap-3 mb-3">
-                <Gamepad2 className="h-8 w-8 text-emerald-400 neon-glow" />
+                <Gamepad2 className="h-8 w-8 text-theme neon-glow" />
                 <h2 className="text-4xl font-bold text-white">
-                  Shop by <span className="text-emerald-400 neon-glow">Category</span>
+                  Shop by <span className="text-theme neon-glow">Category</span>
                 </h2>
               </div>
               <p className="text-gray-400 max-w-2xl mx-auto">
@@ -111,12 +111,12 @@ export default async function Home() {
               {/* Accounts */}
               <Link
                 href="/products?category=accounts"
-                className="group relative p-6 rounded-xl glass border border-emerald-400/10 hover:border-emerald-400/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-emerald-400/10 overflow-hidden"
+                className="group relative p-6 rounded-xl glass border border-theme/10 hover:border-theme/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-theme/10 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 text-7xl opacity-5 group-hover:opacity-10 transition-opacity">👾</div>
                 <div className="relative z-10">
                   <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">👾</div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-xl font-bold text-white group-hover:text-theme transition-colors">
                     Accounts
                   </h3>
                   <p className="text-gray-400 text-sm mt-1">Premium COD accounts with exclusive content</p>
@@ -126,12 +126,12 @@ export default async function Home() {
               {/* Skins */}
               <Link
                 href="/products?category=skins"
-                className="group relative p-6 rounded-xl glass border border-emerald-400/10 hover:border-emerald-400/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-emerald-400/10 overflow-hidden"
+                className="group relative p-6 rounded-xl glass border border-theme/10 hover:border-theme/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-theme/10 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 text-7xl opacity-5 group-hover:opacity-10 transition-opacity">🎨</div>
                 <div className="relative z-10">
                   <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🎨</div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-xl font-bold text-white group-hover:text-theme transition-colors">
                     Skins
                   </h3>
                   <p className="text-gray-400 text-sm mt-1">Exclusive weapon skins and camo collections</p>
@@ -141,12 +141,12 @@ export default async function Home() {
               {/* Themes */}
               <Link
                 href="/products?category=themes"
-                className="group relative p-6 rounded-xl glass border border-emerald-400/10 hover:border-emerald-400/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-emerald-400/10 overflow-hidden"
+                className="group relative p-6 rounded-xl glass border border-theme/10 hover:border-theme/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-theme/10 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 text-7xl opacity-5 group-hover:opacity-10 transition-opacity">🖌️</div>
                 <div className="relative z-10">
                   <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🖌️</div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-xl font-bold text-white group-hover:text-theme transition-colors">
                     Themes
                   </h3>
                   <p className="text-gray-400 text-sm mt-1">Custom UI designs and animated backgrounds</p>
@@ -156,12 +156,12 @@ export default async function Home() {
               {/* Points */}
               <Link
                 href="/products?category=points"
-                className="group relative p-6 rounded-xl glass border border-emerald-400/10 hover:border-emerald-400/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-emerald-400/10 overflow-hidden"
+                className="group relative p-6 rounded-xl glass border border-theme/10 hover:border-theme/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-theme/10 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 text-7xl opacity-5 group-hover:opacity-10 transition-opacity">💰</div>
                 <div className="relative z-10">
                   <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">💰</div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-xl font-bold text-white group-hover:text-theme transition-colors">
                     Points
                   </h3>
                   <p className="text-gray-400 text-sm mt-1">COD Points and in-game currency</p>
@@ -172,11 +172,11 @@ export default async function Home() {
         </section>
         
         {/* Why Choose Us */}
-        <section className="py-16 bg-gradient-to-b from-black to-black/95 border-t border-emerald-400/5">
+        <section className="py-16 bg-gradient-to-b from-black to-black/95 border-t border-theme/5">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold text-white mb-3">
-                Why Choose <span className="text-emerald-400 neon-glow">Icesoulmarket</span>
+                Why Choose <span className="text-theme neon-glow">Icesoulmarket</span>
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
                 The premier destination for Call of Duty gamers worldwide
@@ -203,9 +203,9 @@ export default async function Home() {
               ].map((item, index) => (
                 <div 
                   key={index}
-                  className="glass rounded-xl p-8 text-center border border-emerald-400/10 hover:border-emerald-400/30 transition-all hover:scale-105"
+                  className="glass rounded-xl p-8 text-center border border-theme/10 hover:border-theme/30 transition-all hover:scale-105"
                 >
-                  <item.icon className="h-12 w-12 text-emerald-400 mx-auto mb-4" />
+                  <item.icon className="h-12 w-12 text-theme mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
                   <p className="text-gray-400 text-sm">{item.description}</p>
                 </div>
@@ -215,10 +215,10 @@ export default async function Home() {
         </section>
         
         {/* CTA Section */}
-        <section className="py-16 bg-gradient-to-r from-emerald-950/20 via-black to-emerald-950/20 border-t border-emerald-400/10">
+        <section className="py-16 bg-gradient-to-r from-theme-950/20 via-black to-theme-950/20 border-t border-theme/10">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to <span className="text-emerald-400 neon-glow">Level Up</span> Your Gaming?
+              Ready to <span className="text-theme neon-glow">Level Up</span> Your Gaming?
             </h2>
             <p className="text-gray-400 max-w-2xl mx-auto mb-8">
               Join thousands of gamers who have upgraded their Call of Duty experience with Icesoulmarket

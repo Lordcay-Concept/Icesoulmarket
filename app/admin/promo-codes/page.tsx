@@ -158,7 +158,7 @@ export default function AdminPromoCodesPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white"><span className="text-emerald-400 neon-glow">Promo Codes</span></h1>
+          <h1 className="text-3xl font-bold text-white"><span className="text-theme neon-glow">Promo Codes</span></h1>
           <p className="text-gray-400 mt-1">Manage partner discount codes and commissions</p>
         </div>
         <Button className="gaming-btn" onClick={() => setIsModalOpen(true)}>
@@ -170,14 +170,14 @@ export default function AdminPromoCodesPage() {
         {codes.map((code) => {
           const codeStats = stats[code.id]
           return (
-            <Card key={code.id} className="glass border-emerald-400/10 rounded-2xl">
+            <Card key={code.id} className="glass border-theme/10 rounded-2xl">
               <CardContent className="p-6">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2">
-                      <Tag className="h-4 w-4 text-emerald-400" />
+                      <Tag className="h-4 w-4 text-theme" />
                       <span className="text-white font-mono font-bold text-lg">{code.code}</span>
-                      <span className={`px-2 py-0.5 rounded-full text-xs ${code.is_active ? 'bg-emerald-400/20 text-emerald-400' : 'bg-gray-400/20 text-gray-400'}`}>
+                      <span className={`px-2 py-0.5 rounded-full text-xs ${code.is_active ? 'bg-theme/20 text-theme' : 'bg-gray-400/20 text-gray-400'}`}>
                         {code.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </div>
@@ -192,7 +192,7 @@ export default function AdminPromoCodesPage() {
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="border-emerald-400/20" onClick={() => toggleActive(code.id, code.is_active)}>
+                    <Button size="sm" variant="outline" className="border-theme/20" onClick={() => toggleActive(code.id, code.is_active)}>
                       {code.is_active ? 'Deactivate' : 'Activate'}
                     </Button>
                     <Button size="sm" variant="outline" className="border-red-400/20 text-red-400" onClick={() => handleDelete(code.id)}>
@@ -202,11 +202,11 @@ export default function AdminPromoCodesPage() {
                 </div>
 
                 {codeStats && (
-                  <div className="mt-4 pt-4 border-t border-emerald-400/10 grid grid-cols-3 gap-4">
+                  <div className="mt-4 pt-4 border-t border-theme/10 grid grid-cols-3 gap-4">
                     <div>
                       <p className="text-xs text-gray-500">Times Used</p>
                       <p className="text-white font-bold flex items-center gap-1">
-                        <TrendingUp className="h-3 w-3 text-emerald-400" /> {codeStats.uses}
+                        <TrendingUp className="h-3 w-3 text-theme" /> {codeStats.uses}
                       </p>
                     </div>
                     <div>
@@ -215,7 +215,7 @@ export default function AdminPromoCodesPage() {
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Commission Owed</p>
-                      <p className="text-emerald-400 font-bold">{formatPrice(codeStats.total_commission_owed)}</p>
+                      <p className="text-theme font-bold">{formatPrice(codeStats.total_commission_owed)}</p>
                     </div>
                   </div>
                 )}
@@ -234,7 +234,7 @@ export default function AdminPromoCodesPage() {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="glass rounded-2xl border border-emerald-400/20 w-full max-w-md p-6">
+          <div className="glass rounded-2xl border border-theme/20 w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white">New Promo Code</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white">
@@ -248,7 +248,7 @@ export default function AdminPromoCodesPage() {
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                   placeholder="STREAMER20"
-                  className="bg-black/50 border-emerald-400/20 text-white uppercase"
+                  className="bg-black/50 border-theme/20 text-white uppercase"
                   required
                 />
               </div>
@@ -258,7 +258,7 @@ export default function AdminPromoCodesPage() {
                   value={formData.partner_name}
                   onChange={(e) => setFormData({ ...formData, partner_name: e.target.value })}
                   placeholder="John's Gaming Channel"
-                  className="bg-black/50 border-emerald-400/20 text-white"
+                  className="bg-black/50 border-theme/20 text-white"
                   required
                 />
               </div>
@@ -268,7 +268,7 @@ export default function AdminPromoCodesPage() {
                   type="email"
                   value={formData.partner_email}
                   onChange={(e) => setFormData({ ...formData, partner_email: e.target.value })}
-                  className="bg-black/50 border-emerald-400/20 text-white"
+                  className="bg-black/50 border-theme/20 text-white"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -281,7 +281,7 @@ export default function AdminPromoCodesPage() {
                     value={formData.discount_percentage}
                     onChange={(e) => setFormData({ ...formData, discount_percentage: e.target.value })}
                     placeholder="15"
-                    className="bg-black/50 border-emerald-400/20 text-white"
+                    className="bg-black/50 border-theme/20 text-white"
                     required
                   />
                 </div>
@@ -294,7 +294,7 @@ export default function AdminPromoCodesPage() {
                     value={formData.commission_percentage}
                     onChange={(e) => setFormData({ ...formData, commission_percentage: e.target.value })}
                     placeholder="10"
-                    className="bg-black/50 border-emerald-400/20 text-white"
+                    className="bg-black/50 border-theme/20 text-white"
                     required
                   />
                 </div>
@@ -304,7 +304,7 @@ export default function AdminPromoCodesPage() {
                 <select
                   value={formData.restricted_category_id}
                   onChange={(e) => setFormData({ ...formData, restricted_category_id: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-emerald-400/20 focus:border-emerald-400 text-white"
+                  className="w-full px-3 py-2 rounded-xl bg-black/50 border border-theme/20 focus:border-theme text-white"
                 >
                   <option value="">All Products</option>
                   {categories.map((cat) => (
@@ -318,14 +318,14 @@ export default function AdminPromoCodesPage() {
                   type="date"
                   value={formData.expires_at}
                   onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                  className="bg-black/50 border-emerald-400/20 text-white"
+                  className="bg-black/50 border-theme/20 text-white"
                 />
               </div>
               <div className="flex gap-3 pt-2">
                 <Button type="submit" className="flex-1 gaming-btn">
                   <Check className="mr-2 h-4 w-4" /> Create
                 </Button>
-                <Button type="button" variant="outline" className="flex-1 border-emerald-400/20" onClick={() => setIsModalOpen(false)}>
+                <Button type="button" variant="outline" className="flex-1 border-theme/20" onClick={() => setIsModalOpen(false)}>
                   Cancel
                 </Button>
               </div>

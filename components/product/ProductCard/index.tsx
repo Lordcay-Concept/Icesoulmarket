@@ -1,4 +1,3 @@
-// components/product/ProductCard/index.tsx
 'use client'
 
 import Link from 'next/link'
@@ -44,15 +43,15 @@ export function ProductCard({ product }: ProductCardProps) {
     : 0
   
   return (
-    <Card className="gaming-card group h-full flex flex-col overflow-hidden border-emerald-400/10 hover:border-emerald-400/30">
+    <Card className="gaming-card group h-full flex flex-col overflow-hidden border-theme-10 hover:border-theme-30">
       <CardHeader className="p-0 relative">
         <Link href={`/product/${product.slug}`}>
-          <div className="relative aspect-square overflow-hidden bg-gradient-to-b from-black to-emerald-950/20">
-            <Image
+          <div className="relative aspect-square overflow-hidden bg-gradient-to-b from-black to-black">
+           <Image
               src={product.images[0] || '/images/placeholder.jpg'}
               alt={product.name}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
+              className="object-contain transition-transform duration-500 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             {hasDiscount && (
@@ -61,7 +60,7 @@ export function ProductCard({ product }: ProductCardProps) {
               </Badge>
             )}
             {product.is_featured && (
-              <Badge className="absolute top-3 left-3 bg-gradient-to-r from-emerald-400 to-green-500 text-black border-none">
+              <Badge className="absolute top-3 left-3 gradient-theme gradient-theme-text border-none">
                 <Star className="mr-1 h-3 w-3 fill-current" />
                 Featured
               </Badge>
@@ -72,13 +71,13 @@ export function ProductCard({ product }: ProductCardProps) {
       
       <CardContent className="flex-grow p-4 space-y-2">
         <Link href={`/product/${product.slug}`}>
-          <h3 className="font-semibold text-lg text-white hover:text-emerald-400 transition-colors line-clamp-2">
+          <h3 className="font-semibold text-lg text-white hover:text-theme transition-colors line-clamp-2">
             {product.name}
           </h3>
         </Link>
         
         {product.category && (
-          <p className="text-sm text-emerald-400/70">{product.category.name}</p>
+          <p className="text-sm text-theme-70">{product.category.name}</p>
         )}
         
         <p className="text-sm text-gray-400 line-clamp-2">
@@ -87,12 +86,12 @@ export function ProductCard({ product }: ProductCardProps) {
         
         <div className="flex flex-wrap gap-1 pt-1">
           {product.platform.slice(0, 2).map((platform: string) => (
-            <Badge key={platform} variant="outline" className="text-xs border-emerald-400/20 text-gray-300">
+            <Badge key={platform} variant="outline" className="text-xs border-theme-20 text-gray-300">
               {platform}
             </Badge>
           ))}
           {product.platform.length > 2 && (
-            <Badge variant="outline" className="text-xs border-emerald-400/20 text-gray-300">
+            <Badge variant="outline" className="text-xs border-theme-20 text-gray-300">
               +{product.platform.length - 2}
             </Badge>
           )}
@@ -101,7 +100,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex items-baseline gap-2 pt-1">
           {hasDiscount ? (
             <>
-              <span className="text-2xl font-bold text-emerald-400 neon-glow">
+              <span className="text-2xl font-bold text-theme neon-glow">
                 {formatPrice(product.discount_price!)}
               </span>
               <span className="text-sm text-gray-500 line-through">
@@ -109,7 +108,7 @@ export function ProductCard({ product }: ProductCardProps) {
               </span>
             </>
           ) : (
-            <span className="text-2xl font-bold text-emerald-400 neon-glow">
+            <span className="text-2xl font-bold text-theme neon-glow">
               {formatPrice(product.price)}
             </span>
           )}

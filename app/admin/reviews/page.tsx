@@ -89,7 +89,7 @@ export default function AdminReviewsPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">
-          <span className="text-emerald-400 neon-glow">Reviews</span>
+          <span className="text-theme neon-glow">Reviews</span>
         </h1>
         <p className="text-gray-400 mt-1">Moderate customer reviews and ratings</p>
       </div>
@@ -101,14 +101,14 @@ export default function AdminReviewsPage() {
             placeholder="Search by product, user, or comment..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+            className="pl-9 bg-black/50 border-theme/20 focus:border-theme text-white"
           />
         </div>
       </div>
 
       <div className="space-y-3">
         {filteredReviews.map((review) => (
-          <Card key={review.id} className="glass border-emerald-400/10 rounded-2xl">
+          <Card key={review.id} className="glass border-theme/10 rounded-2xl">
             <CardContent className="p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
@@ -125,7 +125,7 @@ export default function AdminReviewsPage() {
                       <Star
                         key={i}
                         className={`h-4 w-4 ${
-                          i < review.rating ? 'fill-emerald-400 text-emerald-400' : 'text-gray-600'
+                          i < review.rating ? 'fill-theme text-theme' : 'text-gray-600'
                         }`}
                       />
                     ))}

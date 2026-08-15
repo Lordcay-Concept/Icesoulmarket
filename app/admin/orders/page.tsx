@@ -21,7 +21,10 @@ import {
   User,
   Package,
   CreditCard,
-  Calendar
+  Calendar,
+  KeyRound,
+  Gamepad2,
+  Mail
 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -75,9 +78,9 @@ export default function AdminOrdersPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-emerald-400/20 text-emerald-400 border-emerald-500/30'
+      case 'completed': return 'bg-theme/20 text-theme border-theme-500/30'
       case 'processing': return 'bg-blue-400/20 text-blue-400 border-blue-500/30'
-      case 'payment_approved': return 'bg-emerald-400/20 text-emerald-400 border-emerald-500/30'
+      case 'payment_approved': return 'bg-theme/20 text-theme border-theme-500/30'
       case 'pending_verification': return 'bg-yellow-400/20 text-yellow-400 border-yellow-500/30'
       case 'payment_pending': return 'bg-gray-400/20 text-gray-400 border-gray-500/30'
       case 'payment_rejected': return 'bg-red-400/20 text-red-400 border-red-500/30'
@@ -105,6 +108,13 @@ export default function AdminOrdersPage() {
     setExpandedOrder(expandedOrder === orderId ? null : orderId)
   }
 
+  // ✅ Helper to check if any fulfillment fields exist
+  const hasFulfillmentFields = (order: any) => {
+    return order.coins_login_username || 
+           order.coins_login_password || 
+           order.account_delivery_email
+  }
+
   const filteredOrders = orders.filter(o =>
     o.order_number?.toLowerCase().includes(search.toLowerCase())
   )
@@ -121,7 +131,7 @@ export default function AdminOrdersPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">
-          <span className="text-emerald-400 neon-glow">Orders</span>
+          <span className="text-theme neon-glow">Orders</span>
         </h1>
         <p className="text-gray-400 mt-1">Manage customer orders</p>
       </div>
@@ -133,7 +143,7 @@ export default function AdminOrdersPage() {
             placeholder="Search orders..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white"
+            className="pl-9 bg-black/50 border-theme/20 focus:border-theme text-white"
           />
         </div>
       </div>
@@ -143,12 +153,13 @@ export default function AdminOrdersPage() {
           const isExpanded = expandedOrder === order.id
           const statusColor = getStatusColor(order.status)
           const statusLabel = getStatusLabel(order.status)
+          const hasFulfillment = hasFulfillmentFields(order)
           
           return (
-            <Card key={order.id} className="glass border-emerald-400/10 rounded-2xl hover:border-emerald-400/30 transition-all overflow-hidden">
+            <Card key={order.id} className="glass border-theme/10 rounded-2xl hover:border-theme/30 transition-all overflow-hidden">
               {/* Order Header */}
               <div 
-                className="p-5 cursor-pointer hover:bg-emerald-400/5 transition-colors"
+                className="p-5 cursor-pointer hover:bg-theme/5 transition-colors"
                 onClick={() => toggleOrderExpand(order.id)}
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -160,6 +171,12 @@ export default function AdminOrdersPage() {
                       <Badge className={`${statusColor} border px-2.5 py-0.5 text-xs font-medium`}>
                         {statusLabel}
                       </Badge>
+                      {hasFulfillment && (
+                        <Badge className="bg-purple-400/20 text-purple-400 border-purple-500/30 text-xs">
+                          <KeyRound className="h-3 w-3 mr-1" />
+                          Fulfillment Info
+                        </Badge>
+                      )}
                     </div>
                     <div className="flex items-center gap-3 mt-1.5 text-xs sm:text-sm text-gray-400">
                       <span>
@@ -175,12 +192,12 @@ export default function AdminOrdersPage() {
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <div className="text-sm text-gray-400">Total</div>
-                      <div className="text-lg font-bold text-emerald-400 neon-glow">
+                      <div className="text-lg font-bold text-theme neon-glow">
                         {formatPrice(order.total_amount)}
                       </div>
                     </div>
                     <button 
-                      className="p-1.5 rounded-full hover:bg-emerald-400/10 transition-colors text-gray-400 hover:text-white"
+                      className="p-1.5 rounded-full hover:bg-theme/10 transition-colors text-gray-400 hover:text-white"
                       onClick={(e) => {
                         e.stopPropagation()
                         toggleOrderExpand(order.id)
@@ -206,11 +223,11 @@ export default function AdminOrdersPage() {
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
-                    <Separator className="bg-emerald-400/10" />
+                    <Separator className="bg-theme/10" />
                     <div className="p-5 space-y-4">
                       {/* Customer Info */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                        <div className="bg-black/30 rounded-xl p-4 border border-theme/10">
                           <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
                             <User className="h-4 w-4" />
                             Customer Information
@@ -222,7 +239,7 @@ export default function AdminOrdersPage() {
                             {order.shipping_address?.email || order.user_id}
                           </p>
                         </div>
-                        <div className="bg-black/30 rounded-xl p-4 border border-emerald-400/10">
+                        <div className="bg-black/30 rounded-xl p-4 border border-theme/10">
                           <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
                             <Calendar className="h-4 w-4" />
                             Order Details
@@ -236,6 +253,50 @@ export default function AdminOrdersPage() {
                         </div>
                       </div>
 
+                      {/* ✅ NEW: Fulfillment Fields - Only shows if fields exist */}
+                      {hasFulfillment && (
+                        <div className="bg-purple-400/5 rounded-xl p-4 border border-purple-400/20">
+                          <div className="flex items-center gap-2 text-sm text-purple-400 mb-3">
+                            <KeyRound className="h-4 w-4" />
+                            <span className="font-medium">Fulfillment Information</span>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {/* Coins/Points Login */}
+                            {(order.coins_login_username || order.coins_login_password) && (
+                              <div className="bg-black/30 rounded-lg p-3 border border-purple-400/10">
+                                <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">
+                                  <Gamepad2 className="h-3 w-3 text-purple-400" />
+                                  <span>Coins/Points Login</span>
+                                </div>
+                                {order.coins_login_username && (
+                                  <p className="text-white text-sm">
+                                    Username: <span className="text-gray-300">{order.coins_login_username}</span>
+                                  </p>
+                                )}
+                                {order.coins_login_password && (
+                                  <p className="text-white text-sm">
+                                    Password: <span className="text-gray-300 font-mono text-xs">{order.coins_login_password}</span>
+                                  </p>
+                                )}
+                              </div>
+                            )}
+
+                            {/* Account Delivery Email */}
+                            {order.account_delivery_email && (
+                              <div className="bg-black/30 rounded-lg p-3 border border-purple-400/10">
+                                <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">
+                                  <Mail className="h-3 w-3 text-purple-400" />
+                                  <span>Account Delivery Email</span>
+                                </div>
+                                <p className="text-white text-sm">
+                                  {order.account_delivery_email}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                       {/* Items List */}
                       <div>
                         <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
@@ -244,7 +305,7 @@ export default function AdminOrdersPage() {
                         </h4>
                         <div className="space-y-2 bg-black/30 rounded-xl p-3">
                           {order.order_items?.map((item: any, idx: number) => (
-                            <div key={idx} className="flex justify-between items-center text-sm py-1.5 border-b border-emerald-400/5 last:border-0">
+                            <div key={idx} className="flex justify-between items-center text-sm py-1.5 border-b border-theme/5 last:border-0">
                               <div className="flex items-center gap-3">
                                 <span className="text-gray-300">
                                   {item.product_name}
@@ -260,19 +321,19 @@ export default function AdminOrdersPage() {
                       </div>
 
                       {/* Order Summary */}
-                      <div className="bg-emerald-400/5 rounded-xl p-4 border border-emerald-400/10">
+                      <div className="bg-theme/5 rounded-xl p-4 border border-theme/10">
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-400">Subtotal</span>
                           <span className="text-white">{formatPrice(order.total_amount)}</span>
                         </div>
                         <div className="flex justify-between text-sm mt-1">
                           <span className="text-gray-400">Shipping</span>
-                          <span className="text-emerald-400">Free</span>
+                          <span className="text-theme">Free</span>
                         </div>
-                        <Separator className="my-2 bg-emerald-400/10" />
+                        <Separator className="my-2 bg-theme/10" />
                         <div className="flex justify-between font-bold">
                           <span className="text-white">Total</span>
-                          <span className="text-emerald-400 neon-glow">{formatPrice(order.total_amount)}</span>
+                          <span className="text-theme neon-glow">{formatPrice(order.total_amount)}</span>
                         </div>
                       </div>
 
@@ -301,7 +362,7 @@ export default function AdminOrdersPage() {
                         {order.status === 'processing' && (
                           <Button
                             size="sm"
-                            className="bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20"
+                            className="bg-theme/10 text-theme hover:bg-theme/20"
                             onClick={() => updateOrderStatus(order.id, 'completed')}
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />

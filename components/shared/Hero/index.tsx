@@ -1,4 +1,3 @@
-// components/shared/Hero/index.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -89,12 +88,11 @@ export function Hero() {
       {isClient && (
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(20)].map((_, i) => {
-            // Fewer particles on mobile
             if (typeof window !== 'undefined' && window.innerWidth < 768 && i >= 15) return null
             return (
               <motion.div
                 key={i}
-                className="absolute h-0.5 w-0.5 sm:h-1 sm:w-1 rounded-full bg-emerald-400/20"
+                className="absolute h-0.5 w-0.5 sm:h-1 sm:w-1 rounded-full bg-theme-20"
                 initial={{
                   x: Math.random() * 100 + '%',
                   y: Math.random() * 100 + '%',
@@ -135,11 +133,11 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.3 }}
-            className="mb-3 sm:mb-6 inline-flex items-center gap-1.5 sm:gap-2 rounded-full glass px-2.5 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-emerald-400 border border-emerald-400/30"
+            className="mb-3 sm:mb-6 inline-flex items-center gap-1.5 sm:gap-2 rounded-full glass px-2.5 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-theme border border-theme-30"
           >
             <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-full w-full bg-emerald-400"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-theme opacity-75" style={{ backgroundColor: 'var(--theme-primary)' }}></span>
+              <span className="relative inline-flex rounded-full h-full w-full" style={{ backgroundColor: 'var(--theme-primary)' }}></span>
             </span>
             {slides[currentSlide].badge}
           </motion.div>
@@ -163,13 +161,13 @@ export function Hero() {
               </Button>
             </Link>
             <Link href="/products">
-              <Button variant="outline" className="border-emerald-400/30 text-white hover:bg-emerald-400/10 hover:border-emerald-400/50 transition-all text-xs sm:text-sm md:text-base px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-6">
+              <Button variant="outline" className="border-theme-30 text-white hover:bg-theme-10 hover:border-theme-50 transition-all text-xs sm:text-sm md:text-base px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-6">
                 Browse All
               </Button>
             </Link>
           </div>
 
-          {/* ✅ Stats - Row layout on mobile with smaller text */}
+          {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -181,15 +179,15 @@ export function Hero() {
               { label: 'Premium Items', value: '500+' },
               { label: 'Satisfied Users', value: '98%' },
             ].map((stat) => (
-              <div key={stat.label} className="glass rounded-lg px-2.5 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-3 border border-emerald-400/10">
-                <div className="text-xs sm:text-base md:text-2xl font-bold text-emerald-400 neon-glow">{stat.value}</div>
+              <div key={stat.label} className="glass rounded-lg px-2.5 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-3 border border-theme-10">
+                <div className="text-xs sm:text-base md:text-2xl font-bold text-theme neon-glow">{stat.value}</div>
                 <div className="text-[8px] sm:text-xs md:text-sm text-gray-400">{stat.label}</div>
               </div>
             ))}
           </motion.div>
         </motion.div>
 
-        {/* Slide Navigation - smaller on mobile */}
+        {/* Slide Navigation */}
         <div className="absolute bottom-3 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-1.5 sm:gap-2">
           {slides.map((_, index) => (
             <button
@@ -197,7 +195,7 @@ export function Hero() {
               onClick={() => setCurrentSlide(index)}
               className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                 index === currentSlide 
-                  ? 'w-6 sm:w-8 md:w-12 bg-gradient-to-r from-emerald-400 to-green-500 neon-glow' 
+                  ? 'w-6 sm:w-8 md:w-12 gradient-theme neon-glow' 
                   : 'w-1.5 sm:w-2 bg-gray-600 hover:bg-gray-400'
               }`}
             />

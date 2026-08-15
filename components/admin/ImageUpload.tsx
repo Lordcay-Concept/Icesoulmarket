@@ -52,8 +52,8 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
   return (
     <div className="space-y-2">
       {value ? (
-        <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-emerald-400/20">
-          <Image src={value} alt="Product" fill className="object-cover" />
+        <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-theme/20">
+          <Image src={value} alt="Product" fill className="object-contain" />
           <button
             type="button"
             onClick={() => onChange('')}
@@ -63,12 +63,12 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
           </button>
         </div>
       ) : (
-        <label className="flex flex-col items-center justify-center w-32 h-32 rounded-lg border-2 border-dashed border-emerald-400/30 cursor-pointer hover:border-emerald-400/50 transition-colors">
+        <label className="flex flex-col items-center justify-center w-32 h-32 rounded-lg border-2 border-dashed border-theme/30 cursor-pointer hover:border-theme/50 transition-colors">
           {uploading ? (
-            <Loader2 className="h-6 w-6 text-emerald-400 animate-spin" />
+            <Loader2 className="h-6 w-6 text-theme animate-spin" />
           ) : (
             <>
-              <Upload className="h-6 w-6 text-emerald-400 mb-1" />
+              <Upload className="h-6 w-6 text-theme mb-1" />
               <span className="text-xs text-gray-400">Upload</span>
             </>
           )}

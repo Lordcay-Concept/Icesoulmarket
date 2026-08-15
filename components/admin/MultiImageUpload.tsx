@@ -143,11 +143,11 @@ export function MultiImageUpload({ value, onChange, maxImages = 20 }: MultiImage
         {value.map((url, index) => (
           <div
             key={url + index}
-            className="relative aspect-square rounded-lg overflow-hidden border border-emerald-400/20 group"
+            className="relative aspect-square rounded-lg overflow-hidden border border-theme/20 group"
           >
-            <Image src={url} alt={`Product image ${index + 1}`} fill className="object-cover" />
+            <Image src={url} alt={`Product image ${index + 1}`} fill className="object-contain" />
             {index === 0 && (
-              <span className="absolute top-1 left-1 bg-emerald-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded">
+              <span className="absolute top-1 left-1 bg-theme-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded">
                 MAIN
               </span>
             )}
@@ -167,7 +167,7 @@ export function MultiImageUpload({ value, onChange, maxImages = 20 }: MultiImage
                 type="button"
                 onClick={() => moveImage(index, 'left')}
                 disabled={index === 0}
-                className="bg-black/70 rounded p-1 text-white hover:bg-emerald-500/80 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="bg-black/70 rounded p-1 text-white hover:bg-theme-500/80 disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <ChevronLeft className="h-3 w-3" />
               </button>
@@ -175,7 +175,7 @@ export function MultiImageUpload({ value, onChange, maxImages = 20 }: MultiImage
                 type="button"
                 onClick={() => moveImage(index, 'right')}
                 disabled={index === value.length - 1}
-                className="bg-black/70 rounded p-1 text-white hover:bg-emerald-500/80 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="bg-black/70 rounded p-1 text-white hover:bg-theme-500/80 disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <ChevronRight className="h-3 w-3" />
               </button>
@@ -184,12 +184,12 @@ export function MultiImageUpload({ value, onChange, maxImages = 20 }: MultiImage
         ))}
 
         {value.length < maxImages && (
-          <label className="flex flex-col items-center justify-center aspect-square rounded-lg border-2 border-dashed border-emerald-400/30 cursor-pointer hover:border-emerald-400/50 transition-colors">
+          <label className="flex flex-col items-center justify-center aspect-square rounded-lg border-2 border-dashed border-theme/30 cursor-pointer hover:border-theme/50 transition-colors">
             {uploading ? (
-              <Loader2 className="h-5 w-5 text-emerald-400 animate-spin" />
+              <Loader2 className="h-5 w-5 text-theme animate-spin" />
             ) : (
               <>
-                <Upload className="h-5 w-5 text-emerald-400 mb-1" />
+                <Upload className="h-5 w-5 text-theme mb-1" />
                 <span className="text-[10px] text-gray-400 text-center px-1">Add images</span>
               </>
             )}
@@ -207,7 +207,7 @@ export function MultiImageUpload({ value, onChange, maxImages = 20 }: MultiImage
 
       {/* ✅ Custom Delete Confirmation Modal */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
-        <DialogContent className="glass border border-emerald-400/20 rounded-2xl max-w-md">
+        <DialogContent className="glass border border-theme/20 rounded-2xl max-w-md">
           <DialogHeader>
             <DialogTitle className="text-white text-xl">Delete Image</DialogTitle>
             <DialogDescription className="text-gray-400">
@@ -218,7 +218,7 @@ export function MultiImageUpload({ value, onChange, maxImages = 20 }: MultiImage
             <Button
               variant="outline"
               onClick={handleDeleteCancel}
-              className="border-emerald-400/20 text-white hover:bg-emerald-400/10 flex-1"
+              className="border-theme/20 text-white hover:bg-theme/10 flex-1"
             >
               Cancel
             </Button>

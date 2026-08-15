@@ -65,15 +65,15 @@ export default async function CategoriesPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
           <div className="container mx-auto px-4 py-8">
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-2">
-                <Gamepad2 className="h-8 w-8 text-emerald-400 neon-glow" />
+                <Gamepad2 className="h-8 w-8 text-theme neon-glow" />
                 <h1 className="gaming-title text-4xl md:text-5xl">
                   Shop by Category
                 </h1>
-                <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+                <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
               </div>
               <p className="text-gray-400 text-lg">
                 Find the perfect gaming items by category
@@ -87,21 +87,21 @@ export default async function CategoriesPage() {
                   <Link
                     key={category.id}
                     href={`/products?category=${category.slug}`}
-                    className="group relative p-8 rounded-xl glass border border-emerald-400/10 hover:border-emerald-400/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-emerald-400/10 overflow-hidden"
+                    className="group relative p-8 rounded-xl glass border border-theme/10 hover:border-theme/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-theme/10 overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 text-8xl opacity-5 group-hover:opacity-10 transition-opacity">
                       {icon}
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/0 via-emerald-400/0 to-emerald-400/5 group-hover:to-emerald-400/10 transition-all" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-theme/0 via-theme/0 to-theme/5 group-hover:to-theme/10 transition-all" />
                     <div className="relative z-10">
                       <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
                         {icon}
                       </div>
-                      <h3 className="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                      <h3 className="text-2xl font-bold text-white group-hover:text-theme transition-colors">
                         {category.name}
                       </h3>
                       <p className="text-gray-400 mt-2">{category.description}</p>
-                      <div className="flex items-center gap-2 text-emerald-400 mt-4 group-hover:gap-3 transition-all">
+                      <div className="flex items-center gap-2 text-theme mt-4 group-hover:gap-3 transition-all">
                         <span>Browse Products</span>
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </div>
@@ -120,15 +120,15 @@ export default async function CategoriesPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
           <div className="container mx-auto px-4 py-8">
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-2">
-                <Gamepad2 className="h-8 w-8 text-emerald-400 neon-glow" />
+                <Gamepad2 className="h-8 w-8 text-theme neon-glow" />
                 <h1 className="gaming-title text-4xl md:text-5xl">
                   Shop by Category
                 </h1>
-                <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+                <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
               </div>
               <p className="text-gray-400 text-lg">
                 Find the perfect gaming items by category
@@ -140,21 +140,21 @@ export default async function CategoriesPage() {
                 <Link
                   key={category.id}
                   href={`/products?category=${category.slug}`}
-                  className="group relative p-8 rounded-xl glass border border-emerald-400/10 hover:border-emerald-400/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-emerald-400/10 overflow-hidden"
+                  className="group relative p-8 rounded-xl glass border border-theme/10 hover:border-theme/30 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-theme/10 overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 text-8xl opacity-5 group-hover:opacity-10 transition-opacity">
                     {category.icon}
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/0 via-emerald-400/0 to-emerald-400/5 group-hover:to-emerald-400/10 transition-all" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-theme/0 via-theme/0 to-theme/5 group-hover:to-theme/10 transition-all" />
                   <div className="relative z-10">
                     <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
                       {category.icon}
                     </div>
-                    <h3 className="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                    <h3 className="text-2xl font-bold text-white group-hover:text-theme transition-colors">
                       {category.name}
                     </h3>
                     <p className="text-gray-400 mt-2">{category.description}</p>
-                    <div className="flex items-center gap-2 text-emerald-400 mt-4 group-hover:gap-3 transition-all">
+                    <div className="flex items-center gap-2 text-theme mt-4 group-hover:gap-3 transition-all">
                       <span>Browse Products</span>
                       <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </div>

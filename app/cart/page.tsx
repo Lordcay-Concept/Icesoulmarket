@@ -56,7 +56,7 @@ export default function CartPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10 flex items-center justify-center">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10 flex items-center justify-center">
           <div className="text-gray-400">Loading cart...</div>
         </main>
         <Footer />
@@ -68,7 +68,7 @@ export default function CartPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
           <div className="container mx-auto px-4 py-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -96,7 +96,7 @@ export default function CartPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
         <div className="container mx-auto px-4 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -105,11 +105,11 @@ export default function CartPage() {
           >
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <Gamepad2 className="h-8 w-8 text-emerald-400 neon-glow" />
+                <Gamepad2 className="h-8 w-8 text-theme neon-glow" />
                 <h1 className="text-4xl font-bold text-white">
-                  Shopping <span className="text-emerald-400 neon-glow">Cart</span>
+                  Shopping <span className="text-theme neon-glow">Cart</span>
                 </h1>
-                <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+                <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
               </div>
               <Button 
                 variant="ghost" 
@@ -130,15 +130,15 @@ export default function CartPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                   >
-                    <Card className="glass border-emerald-400/20 rounded-2xl hover:border-emerald-400/40 transition-all">
+                    <Card className="glass border-theme-20 rounded-2xl hover:border-theme-40 transition-all">
                       <CardContent className="p-4">
                         <div className="flex gap-4">
-                          <div className="relative w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-black/50 border border-emerald-400/10">
+                          <div className="relative w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-black/50 border border-theme-10">
                             <Image
                               src={item.image}
                               alt={item.name}
                               fill
-                              className="object-cover"
+                              className="object-contain"
                             />
                           </div>
                           
@@ -172,7 +172,7 @@ export default function CartPage() {
                                 <Button
                                   variant="outline"
                                   size="icon"
-                                  className="h-8 w-8 border-emerald-400/30 hover:bg-emerald-400/10 text-white"
+                                  className="h-8 w-8 border-theme-30 hover:bg-theme-10 text-white"
                                   onClick={() => handleUpdateQuantity(item.id, item.quantity, -1)}
                                 >
                                   <Minus className="h-3 w-3" />
@@ -181,14 +181,14 @@ export default function CartPage() {
                                 <Button
                                   variant="outline"
                                   size="icon"
-                                  className="h-8 w-8 border-emerald-400/30 hover:bg-emerald-400/10 text-white"
+                                  className="h-8 w-8 border-theme-30 hover:bg-theme-10 text-white"
                                   onClick={() => handleUpdateQuantity(item.id, item.quantity, 1)}
                                 >
                                   <Plus className="h-3 w-3" />
                                 </Button>
                               </div>
                               <div className="text-right">
-                                <div className="text-lg font-bold text-emerald-400 neon-glow">
+                                <div className="text-lg font-bold text-theme neon-glow">
                                   {formatPrice(item.price * item.quantity)}
                                 </div>
                                 <div className="text-sm text-gray-400">
@@ -210,7 +210,7 @@ export default function CartPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <Card className="glass border-emerald-400/20 rounded-2xl sticky top-24">
+                  <Card className="glass border-theme-20 rounded-2xl sticky top-24">
                     <CardHeader>
                       <CardTitle className="text-white">Order Summary</CardTitle>
                     </CardHeader>
@@ -222,11 +222,11 @@ export default function CartPage() {
                         </div>
                       </div>
                       
-                      <Separator className="bg-emerald-400/10" />
+                      <Separator className="bg-theme-10" />
                       
                       <div className="flex justify-between text-lg font-bold text-white">
                         <span>Total</span>
-                        <span className="text-emerald-400 neon-glow">{formatPrice(total)}</span>
+                        <span className="text-theme neon-glow">{formatPrice(total)}</span>
                       </div>
 
                       <div className="text-xs text-gray-400">

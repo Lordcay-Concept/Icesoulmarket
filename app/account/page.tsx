@@ -118,7 +118,7 @@ export default function AccountPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10 flex items-center justify-center">
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10 flex items-center justify-center">
           <div className="text-gray-400">Loading profile...</div>
         </main>
       </>
@@ -132,18 +132,18 @@ export default function AccountPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-emerald-950/10">
+      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="flex items-center gap-3 mb-8">
-              <Gamepad2 className="h-8 w-8 text-emerald-400 neon-glow" />
+              <Gamepad2 className="h-8 w-8 text-theme neon-glow" />
               <h1 className="text-4xl font-bold text-white">
-                My <span className="text-emerald-400 neon-glow">Profile</span>
+                My <span className="text-theme neon-glow">Profile</span>
               </h1>
-              <Sparkles className="h-5 w-5 text-emerald-300 animate-pulse" />
+              <Sparkles className="h-5 w-5 text-theme-300 animate-pulse" />
               {isAdmin && (
-                <span className="ml-2 px-3 py-1 rounded-full text-xs bg-emerald-400/20 text-emerald-400 border border-emerald-400/30">
+                <span className="ml-2 px-3 py-1 rounded-full text-xs bg-theme-20 text-theme border border-theme-30">
                   Admin
                 </span>
               )}
@@ -151,17 +151,17 @@ export default function AccountPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Profile Card */}
-              <Card className="glass border-emerald-400/20 rounded-2xl md:col-span-1">
+              <Card className="glass border-theme-20 rounded-2xl md:col-span-1">
                 <CardContent className="p-6 text-center">
                   <div className="relative inline-block">
-                    <Avatar className="h-24 w-24 mx-auto mb-4 border-2 border-emerald-400/30">
+                    <Avatar className="h-24 w-24 mx-auto mb-4 border-2 border-theme-30">
                       <AvatarImage src={formData.avatar_url || ''} />
-                      <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-black text-2xl font-bold">
+                      <AvatarFallback className="bg-gradient-to-br from-theme-500 to-green-600 text-black text-2xl font-bold">
                         {profile?.username?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
                       </AvatarFallback>
                     </Avatar>
                     {isEditing && (
-                      <div className="absolute -bottom-1 -right-1 bg-emerald-400 rounded-full p-1.5">
+                      <div className="absolute -bottom-1 -right-1 bg-theme rounded-full p-1.5">
                         <Camera className="h-3 w-3 text-black" />
                       </div>
                     )}
@@ -173,15 +173,15 @@ export default function AccountPage() {
                         {profile?.full_name || profile?.username || 'User'}
                       </h2>
                       <p className="text-gray-400 text-sm">{user.email}</p>
-                      <div className="mt-4 p-3 rounded-xl bg-emerald-400/5 border border-emerald-400/10">
+                      <div className="mt-4 p-3 rounded-xl bg-theme-5 border border-theme-10">
                         <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
-                          <Calendar className="h-4 w-4 text-emerald-400" />
+                          <Calendar className="h-4 w-4 text-theme" />
                           <span>Joined: {new Date(user.created_at).toLocaleDateString()}</span>
                         </div>
                       </div>
                       <Button 
                         variant="outline" 
-                        className="mt-4 border-emerald-400/20 text-emerald-400 hover:bg-emerald-400/10 w-full"
+                        className="mt-4 border-theme-20 text-theme hover:bg-theme-10 w-full"
                         onClick={() => setIsEditing(true)}
                       >
                         <Edit className="mr-2 h-4 w-4" />
@@ -195,7 +195,7 @@ export default function AccountPage() {
                         <Input
                           value={formData.username}
                           onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                          className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white h-9 text-sm"
+                          className="bg-black/50 border-theme-20 focus:border-theme text-white h-9 text-sm"
                           placeholder="Username"
                         />
                       </div>
@@ -204,7 +204,7 @@ export default function AccountPage() {
                         <Input
                           value={formData.full_name}
                           onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                          className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white h-9 text-sm"
+                          className="bg-black/50 border-theme-20 focus:border-theme text-white h-9 text-sm"
                           placeholder="Full Name"
                         />
                       </div>
@@ -213,14 +213,14 @@ export default function AccountPage() {
                         <Input
                           value={formData.avatar_url}
                           onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
-                          className="bg-black/50 border-emerald-400/20 focus:border-emerald-400 text-white h-9 text-sm"
+                          className="bg-black/50 border-theme-20 focus:border-theme text-white h-9 text-sm"
                           placeholder="https://example.com/avatar.jpg"
                         />
                       </div>
                       <div className="flex gap-2 pt-2">
                         <Button
                           size="sm"
-                          className="flex-1 bg-emerald-400 text-black hover:bg-emerald-400/80"
+                          className="flex-1 bg-theme text-black hover:bg-theme/80"
                           onClick={handleUpdateProfile}
                           disabled={isSaving}
                         >
@@ -271,10 +271,10 @@ export default function AccountPage() {
 
               {/* Account Options */}
               <div className="md:col-span-2 space-y-4">
-                <Card className="glass border-emerald-400/20 rounded-2xl">
+                <Card className="glass border-theme-20 rounded-2xl">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
-                      <Package className="h-5 w-5 text-emerald-400" />
+                      <Package className="h-5 w-5 text-theme" />
                       Recent Orders
                     </CardTitle>
                   </CardHeader>
@@ -283,7 +283,7 @@ export default function AccountPage() {
                       <Package className="h-12 w-12 text-gray-600 mx-auto mb-3" />
                       <p className="text-gray-400">No orders yet</p>
                       <Link href="/products">
-                        <Button variant="link" className="text-emerald-400 hover:text-emerald-300">
+                        <Button variant="link" className="text-theme hover:text-theme-300">
                           Start Shopping
                         </Button>
                       </Link>
@@ -291,29 +291,29 @@ export default function AccountPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="glass border-emerald-400/20 rounded-2xl">
+                <Card className="glass border-theme-20 rounded-2xl">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
-                      <Settings className="h-5 w-5 text-emerald-400" />
+                      <Settings className="h-5 w-5 text-theme" />
                       Account Settings
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <Link href="/account/orders">
-                      <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-emerald-400/10 rounded-xl">
-                        <Package className="mr-2 h-4 w-4 text-emerald-400" />
+                      <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-theme-10 rounded-xl">
+                        <Package className="mr-2 h-4 w-4 text-theme" />
                         View All Orders
                       </Button>
                     </Link>
                     <Link href="/forgot-password">
-                      <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-emerald-400/10 rounded-xl">
-                        <Mail className="mr-2 h-4 w-4 text-emerald-400" />
+                      <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-theme-10 rounded-xl">
+                        <Mail className="mr-2 h-4 w-4 text-theme" />
                         Change Password
                       </Button>
                     </Link>
                     {isAdmin && (
                       <Link href="/admin/dashboard">
-                        <Button variant="ghost" className="w-full justify-start text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10 rounded-xl">
+                        <Button variant="ghost" className="w-full justify-start text-theme hover:text-theme-300 hover:bg-theme-10 rounded-xl">
                           <Sparkles className="mr-2 h-4 w-4" />
                           Go to Admin Dashboard
                         </Button>

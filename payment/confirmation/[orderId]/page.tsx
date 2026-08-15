@@ -63,11 +63,11 @@ export default function PaymentConfirmationPage({ params }: { params: { orderId:
       <Navbar />
       <main className="container mx-auto px-4 py-24">
         <div className="max-w-2xl mx-auto">
-          <Card className="gaming-card border-gaming-green/30">
+          <Card className="gaming-card border-theme/30">
             <CardContent className="py-12 text-center">
               <div className="mb-6">
-                <div className="h-20 w-20 rounded-full bg-gaming-green/10 mx-auto flex items-center justify-center">
-                  <CheckCircle className="h-12 w-12 text-gaming-green" />
+                <div className="h-20 w-20 rounded-full bg-theme/10 mx-auto flex items-center justify-center">
+                  <CheckCircle className="h-12 w-12 text-theme" />
                 </div>
               </div>
               
@@ -82,7 +82,7 @@ export default function PaymentConfirmationPage({ params }: { params: { orderId:
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Order Number</span>
-                    <span className="text-gaming-green font-mono">#{order?.order_number}</span>
+                    <span className="text-theme font-mono">#{order?.order_number}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Total Amount</span>
@@ -98,8 +98,8 @@ export default function PaymentConfirmationPage({ params }: { params: { orderId:
                 </div>
               </div>
 
-              <div className="bg-gaming-green/5 border border-gaming-green/20 rounded-lg p-4 mb-6">
-                <div className="flex items-center gap-2 text-gaming-green mb-2">
+              <div className="bg-theme/5 border border-theme/20 rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-2 text-theme mb-2">
                   <Mail className="h-5 w-5" />
                   <span className="font-semibold">What happens next?</span>
                 </div>
@@ -113,12 +113,12 @@ export default function PaymentConfirmationPage({ params }: { params: { orderId:
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/account/orders">
-                  <Button className="bg-gaming-green text-black hover:bg-gaming-green/80">
+                  <Button className="bg-theme text-black hover:bg-theme/80">
                     View My Orders
                   </Button>
                 </Link>
                 <Link href="/">
-                  <Button variant="outline" className="border-gaming-green/30 text-white hover:bg-gaming-green/10">
+                  <Button variant="outline" className="border-theme/30 text-white hover:bg-theme/10">
                     Continue Shopping
                   </Button>
                 </Link>

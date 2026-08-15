@@ -1,7 +1,7 @@
 // app/payment/[orderId]/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react' 
 import { useParams, useRouter } from 'next/navigation'
 import { Navbar } from '@/components/shared/Navbar'
 import { Footer } from '@/components/shared/Footer'
@@ -12,7 +12,23 @@ import { Separator } from '@/components/ui/separator'
 import { toast } from '@/components/ui/use-toast'
 import { DatabaseService } from '@/lib/services/database.service'
 import { useCurrency } from '@/lib/hooks/useCurrency'
-import { Copy, Check, Clock, CheckCircle, XCircle, Building2 } from 'lucide-react'
+import { 
+  Copy, 
+  Check, 
+  Clock, 
+  CheckCircle, 
+  XCircle, 
+  Building2, 
+  User, 
+  Hash, 
+  FileText,
+  Banknote,
+  ArrowLeft,
+  Shield,
+  Loader2
+} from 'lucide-react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 export default function PaymentPage() {
   const params = useParams()
@@ -26,11 +42,7 @@ export default function PaymentPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadData()
-  }, [orderId])
-
-  const loadData = async () => {
+ const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const supabase = DatabaseService.getSupabaseClient()
@@ -50,7 +62,11 @@ export default function PaymentPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [orderId]) 
+
+  useEffect(() => {
+    loadData()
+  }, [loadData]) 
 
   const copyAccountNumber = () => {
     navigator.clipboard.writeText(bankSettings?.account_number || '')
@@ -64,8 +80,6 @@ export default function PaymentPage() {
     try {
       const supabase = DatabaseService.getSupabaseClient()
 
-      // Controlled, ownership-checked status transition — replaces the
-      // direct table updates that were silently blocked by RLS before.
       const { error: rpcError } = await supabase.rpc('confirm_payment_sent', {
         p_order_id: orderId,
       })
@@ -94,8 +108,6 @@ export default function PaymentPage() {
         variant: 'success',
       })
 
-      // Professional flow: send them to their order history, not leave
-      // them stuck on a payment page whose job is now done.
       router.push('/account/orders')
     } catch (error: any) {
       console.error('Error confirming payment:', error)
@@ -113,9 +125,13 @@ export default function PaymentPage() {
     return (
       <>
         <Navbar />
-        <main className="container mx-auto px-4 py-24 flex items-center justify-center">
-          <div className="text-gray-400">Loading payment details...</div>
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-8 w-8 text-theme animate-spin" />
+            <p className="text-gray-400">Loading payment details...</p>
+          </div>
         </main>
+        <Footer />
       </>
     )
   }
@@ -124,103 +140,255 @@ export default function PaymentPage() {
     return (
       <>
         <Navbar />
-        <main className="container mx-auto px-4 py-24 text-center">
-          <p className="text-gray-400">Order not found.</p>
+        <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10 flex items-center justify-center">
+          <div className="text-center">
+            <XCircle className="h-16 w-16 text-red-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white mb-2">Order Not Found</h2>
+            <p className="text-gray-400">The order you&rsquo;re looking for doesn&rsquo;t exist.</p>
+            <Link href="/account/orders">
+              <Button className="mt-6 gaming-btn">View My Orders</Button>
+            </Link>
+          </div>
         </main>
+        <Footer />
       </>
     )
   }
 
+  const getStatusDisplay = () => {
+    if (order.status === 'pending_verification') {
+      return {
+        icon: Clock,
+        color: 'text-yellow-400',
+        bg: 'bg-yellow-400/10',
+        border: 'border-yellow-400/20',
+        text: 'Payment submitted — awaiting admin approval'
+      }
+    }
+    if (order.status === 'payment_approved') {
+      return {
+        icon: CheckCircle,
+        color: 'text-theme',
+        bg: 'bg-theme/10',
+        border: 'border-theme/20',
+        text: 'Order confirmed! Your order is being processed.'
+      }
+    }
+    if (order.status === 'payment_rejected') {
+      return {
+        icon: XCircle,
+        color: 'text-red-400',
+        bg: 'bg-red-400/10',
+        border: 'border-red-400/20',
+        text: 'We couldn\'t verify this payment. Please contact support.'
+      }
+    }
+    return null
+  }
+
+  const statusInfo = getStatusDisplay()
+
   return (
     <>
       <Navbar />
-      <main className="container mx-auto px-4 py-24">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold text-white mb-2">Complete Your Payment</h1>
-          <p className="text-gray-400 mb-8">Order #{order.order_number}</p>
+      <main className="min-h-screen pt-20 bg-gradient-to-b from-black via-black to-theme-950/10">
+        <div className="container mx-auto px-4 py-8">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="max-w-2xl mx-auto mb-8"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <Link href="/account/orders" className="text-gray-400 hover:text-theme transition-colors">
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
+              <div>
+                <h1 className="text-2xl font-bold text-white">
+                  <span className="text-theme neon-glow">Complete</span> Payment
+                </h1>
+                <p className="text-sm text-gray-400">
+                  Order #{order.order_number}
+                </p>
+              </div>
+            </div>
+          </motion.div>
 
-          {order.status === 'pending_verification' && (
-            <div className="mb-6 flex items-center gap-3 p-4 rounded-lg bg-yellow-400/10 border border-yellow-400/20 text-yellow-400">
-              <Clock className="h-5 w-5 flex-shrink-0" />
-              <span>Payment submitted — awaiting admin approval.</span>
-            </div>
-          )}
-          {order.status === 'payment_approved' && (
-            <div className="mb-6 flex items-center gap-3 p-4 rounded-lg bg-emerald-400/10 border border-emerald-400/20 text-emerald-400">
-              <CheckCircle className="h-5 w-5 flex-shrink-0" />
-              <span>Order confirmed! Your order is being processed.</span>
-            </div>
-          )}
-          {order.status === 'payment_rejected' && (
-            <div className="mb-6 flex items-center gap-3 p-4 rounded-lg bg-red-400/10 border border-red-400/20 text-red-400">
-              <XCircle className="h-5 w-5 flex-shrink-0" />
-              <span>We couldn&apos;t verify this payment. Please contact support.</span>
-            </div>
-          )}
+          <div className="max-w-2xl mx-auto space-y-6">
+            {/* Status Banner */}
+            {statusInfo && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className={`flex items-center gap-3 p-4 rounded-xl ${statusInfo.bg} border ${statusInfo.border} ${statusInfo.color}`}
+              >
+                <statusInfo.icon className="h-5 w-5 flex-shrink-0" />
+                <span className="text-sm">{statusInfo.text}</span>
+              </motion.div>
+            )}
 
-          <Card className="gaming-card">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-gaming-green" />
-                Bank Transfer Details
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-gray-500">Bank Name</p>
-                  <p className="text-white font-medium">{bankSettings?.bank_name}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Account Name</p>
-                  <p className="text-white font-medium">{bankSettings?.account_name}</p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-gray-500">Account Number</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <p className="text-white font-mono text-lg">{bankSettings?.account_number}</p>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8 border-gaming-green/30"
-                      onClick={copyAccountNumber}
+            {/* Bank Details Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
+              <Card className="glass border-theme-20 rounded-2xl overflow-hidden">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-theme-10">
+                      <Building2 className="h-5 w-5 text-theme" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-white">Bank Transfer Details</CardTitle>
+                      <p className="text-sm text-gray-400">Transfer the exact amount to complete your order</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  {/* Bank Info Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl bg-black/30 border border-theme-10">
+                      <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+                        <Building2 className="h-3.5 w-3.5" />
+                        Bank Name
+                      </div>
+                      <p className="text-white font-medium">{bankSettings?.bank_name || 'N/A'}</p>
+                    </div>
+                    <div className="p-4 rounded-xl bg-black/30 border border-theme-10">
+                      <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+                        <User className="h-3.5 w-3.5" />
+                        Account Name
+                      </div>
+                      <p className="text-white font-medium">{bankSettings?.account_name || 'N/A'}</p>
+                    </div>
+                  </div>
+
+                  {/* Account Number - Highlighted */}
+                  <div className="p-4 rounded-xl bg-theme-5 border border-theme-20">
+                    <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+                      <Hash className="h-3.5 w-3.5 text-theme" />
+                      Account Number
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="text-2xl font-bold text-theme font-mono tracking-wider">
+                        {bankSettings?.account_number || 'N/A'}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-theme-30 text-theme hover:bg-theme-10 flex-shrink-0"
+                        onClick={copyAccountNumber}
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="h-4 w-4 mr-1" />
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-4 w-4 mr-1" />
+                            Copy
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Branch (if exists) */}
+                  {bankSettings?.branch && (
+                    <div className="p-4 rounded-xl bg-black/30 border border-theme-10">
+                      <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+                        <Building2 className="h-3.5 w-3.5" />
+                        Branch
+                      </div>
+                      <p className="text-white font-medium">{bankSettings.branch}</p>
+                    </div>
+                  )}
+
+                  {/* Instructions */}
+                  {bankSettings?.instructions && (
+                    <div className="p-4 rounded-xl bg-theme-5 border border-theme-20">
+                      <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+                        <FileText className="h-3.5 w-3.5 text-theme" />
+                        Instructions
+                      </div>
+                      <p className="text-gray-300 text-sm">{bankSettings.instructions}</p>
+                    </div>
+                  )}
+
+                  <Separator className="bg-theme-20" />
+
+                  {/* Amount Summary */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm">Amount to Pay</p>
+                      <p className="text-gray-500 text-xs">Please transfer the exact amount</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-theme neon-glow">
+                        {formatPrice(order.total_amount)}
+                      </div>
+                      <p className="text-xs text-gray-500">Total including all fees</p>
+                    </div>
+                  </div>
+
+                  {/* Security Note */}
+                  <div className="flex items-center gap-2 p-3 rounded-xl bg-theme-5 border border-theme-10">
+                    <Shield className="h-4 w-4 text-theme flex-shrink-0" />
+                    <p className="text-xs text-gray-400">
+                      Your payment is secure and encrypted. We&apos;ll notify you once verified.
+                    </p>
+                  </div>
+
+                  {/* Confirm Button */}
+                  {order.status === 'payment_pending' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.3 }}
                     >
-                      {copied ? <Check className="h-4 w-4 text-gaming-green" /> : <Copy className="h-4 w-4" />}
-                    </Button>
-                  </div>
-                </div>
-                {bankSettings?.branch && (
-                  <div className="col-span-2">
-                    <p className="text-gray-500">Branch</p>
-                    <p className="text-white font-medium">{bankSettings.branch}</p>
-                  </div>
-                )}
-              </div>
+                      <Button
+                        onClick={handleConfirmPayment}
+                        disabled={isSubmitting}
+                        className="w-full gaming-btn text-lg py-6"
+                      >
+                        {isSubmitting ? (
+                          <div className="flex items-center gap-2">
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                            Submitting...
+                          </div>
+                        ) : (
+                          <>
+                            <Banknote className="mr-2 h-5 w-5" />
+                            I Have Sent The Money
+                          </>
+                        )}
+                      </Button>
+                      <p className="text-xs text-gray-500 text-center mt-3">
+                        By clicking this button, you confirm that you have made the transfer.
+                        Our team will verify your payment shortly.
+                      </p>
+                    </motion.div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
 
-              {bankSettings?.instructions && (
-                <div className="bg-gaming-green/5 border border-gaming-green/20 rounded-lg p-3 text-sm text-gray-300">
-                  {bankSettings.instructions}
-                </div>
-              )}
-
-              <Separator className="bg-gaming-green/20" />
-
-              <div className="flex justify-between text-lg font-bold text-white">
-                <span>Amount to Pay</span>
-                <span className="text-gaming-green">{formatPrice(order.total_amount)}</span>
-              </div>
-
-              {order.status === 'payment_pending' && (
-                <Button
-                  onClick={handleConfirmPayment}
-                  disabled={isSubmitting}
-                  className="w-full bg-gaming-green text-black hover:bg-gaming-green/80 text-lg py-6"
-                >
-                  {isSubmitting ? 'Submitting...' : 'I Have Sent The Money'}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+            {/* Back to Orders */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.4 }}
+              className="text-center"
+            >
+              <Link href="/account/orders" className="text-sm text-gray-400 hover:text-theme transition-colors">
+                ← Back to My Orders
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </main>
       <WhatsAppButton />

@@ -1,4 +1,3 @@
-// components/shared/Navbar/index.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -74,17 +73,17 @@ export function Navbar() {
   ]
 
   return (
-    <nav className="fixed top-0 z-50 w-full glass border-b border-emerald-400/10">
+    <nav className="fixed top-0 z-50 w-full glass border-b border-theme-10">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <div className="relative">
-            <Gamepad2 className="h-6 w-6 text-emerald-400 neon-glow" />
-            <Sparkles className="absolute -top-1 -right-1 h-3 w-3 text-emerald-300 animate-pulse" />
+            <Gamepad2 className="h-6 w-6 text-theme neon-glow" />
+            <Sparkles className="absolute -top-1 -right-1 h-3 w-3 text-theme-70 animate-pulse" />
           </div>
           <span className="text-xl font-bold">
             <span className="text-white">Icesoul</span>
-            <span className="text-emerald-400 neon-glow">Market</span>
+            <span className="text-theme neon-glow">Market</span>
           </span>
         </Link>
 
@@ -97,7 +96,7 @@ export function Navbar() {
               className={cn(
                 'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300',
                 pathname === link.href
-                  ? 'text-emerald-400 bg-emerald-400/10 neon-glow'
+                  ? 'text-theme bg-theme-10 neon-glow'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               )}
             >
@@ -110,10 +109,10 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {/* Cart */}
           <Link href="/cart" className="relative group">
-            <Button variant="ghost" size="icon" className="relative hover:bg-emerald-400/10">
-              <ShoppingCart className="h-5 w-5 text-gray-400 group-hover:text-emerald-400 transition-colors" />
+            <Button variant="ghost" size="icon" className="relative hover:bg-theme-10">
+              <ShoppingCart className="h-5 w-5 text-gray-400 group-hover:text-theme transition-colors" />
               {isHydrated && cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-green-500 text-xs font-bold text-black">
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full gradient-theme gradient-theme-text text-xs font-bold">
                   {cartCount}
                 </span>
               )}
@@ -124,10 +123,10 @@ export function Navbar() {
           {user ? (
             <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
-                <div className="hidden md:flex items-center gap-2 rounded-full hover:bg-emerald-400/10 px-3 py-1.5 cursor-pointer transition-all hover:scale-105">
-                  <Avatar className="h-8 w-8 border border-emerald-400/30">
+                <div className="hidden md:flex items-center gap-2 rounded-full hover:bg-theme-10 px-3 py-1.5 cursor-pointer transition-all hover:scale-105">
+                  <Avatar className="h-8 w-8 border border-theme-30">
                     <AvatarImage src={profile?.avatar_url || ''} />
-                    <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-black font-bold">
+                    <AvatarFallback className="gradient-theme gradient-theme-text font-bold">
                       {getAvatarFallback(profile)}
                     </AvatarFallback>
                   </Avatar>
@@ -140,7 +139,7 @@ export function Navbar() {
                   )} />
                 </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="glass border-emerald-400/20 w-56" align="end" sideOffset={8}>
+              <DropdownMenuContent className="glass border-theme-20 w-56" align="end" sideOffset={8}>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium text-white">
@@ -148,43 +147,43 @@ export function Navbar() {
                     </p>
                     <p className="text-xs text-gray-400">{user.email}</p>
                     {isAdmin && (
-                      <span className="text-xs text-emerald-400 font-medium">🔑 Admin</span>
+                      <span className="text-xs text-theme font-medium">🔑 Admin</span>
                     )}
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-emerald-400/10" />
+                <DropdownMenuSeparator className="bg-theme-10" />
                 
-                <DropdownMenuItem asChild className="cursor-pointer hover:bg-emerald-400/10 focus:bg-emerald-400/10">
-                  <Link href="/account" className="text-gray-300 hover:text-emerald-400 transition-colors">
+                <DropdownMenuItem asChild className="cursor-pointer hover:bg-theme-10 focus:bg-theme-10">
+                  <Link href="/account" className="text-gray-300 hover:text-theme transition-colors">
                     <UserCircle className="mr-2 h-4 w-4" />
                     My Profile
                   </Link>
                 </DropdownMenuItem>
                 
-                <DropdownMenuItem asChild className="cursor-pointer hover:bg-emerald-400/10 focus:bg-emerald-400/10">
-                  <Link href="/account/orders" className="text-gray-300 hover:text-emerald-400 transition-colors">
+                <DropdownMenuItem asChild className="cursor-pointer hover:bg-theme-10 focus:bg-theme-10">
+                  <Link href="/account/orders" className="text-gray-300 hover:text-theme transition-colors">
                     <Package className="mr-2 h-4 w-4" />
                     My Orders
                   </Link>
                 </DropdownMenuItem>
                 
-                <DropdownMenuItem asChild className="cursor-pointer hover:bg-emerald-400/10 focus:bg-emerald-400/10">
-                  <Link href="/account/settings" className="text-gray-300 hover:text-emerald-400 transition-colors">
+                <DropdownMenuItem asChild className="cursor-pointer hover:bg-theme-10 focus:bg-theme-10">
+                  <Link href="/account/settings" className="text-gray-300 hover:text-theme transition-colors">
                     <Settings className="mr-2 h-4 w-4" />
                     Settings
                   </Link>
                 </DropdownMenuItem>
                 
                 {isAdmin && (
-                  <DropdownMenuItem asChild className="cursor-pointer hover:bg-emerald-400/10 focus:bg-emerald-400/10">
-                    <Link href="/admin/dashboard" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+                  <DropdownMenuItem asChild className="cursor-pointer hover:bg-theme-10 focus:bg-theme-10">
+                    <Link href="/admin/dashboard" className="text-theme hover:opacity-80 transition-opacity">
                       <Sparkles className="mr-2 h-4 w-4" />
                       Admin Dashboard
                     </Link>
                   </DropdownMenuItem>
                 )}
                 
-                <DropdownMenuSeparator className="bg-emerald-400/10" />
+                <DropdownMenuSeparator className="bg-theme-10" />
                 
                 <DropdownMenuItem 
                   onClick={handleSignOut} 
@@ -203,7 +202,7 @@ export function Navbar() {
             </Link>
           )}
 
-          {/* ✅ Mobile Menu Button - With right padding to prevent cut-off */}
+          {/* Mobile Menu Button */}
           <Button
             variant="ghost"
             size="icon"
@@ -215,9 +214,9 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* ✅ Mobile Menu - Login button now inside */}
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden glass border-t border-emerald-400/10">
+        <div className="md:hidden glass border-t border-theme-10">
           <div className="container mx-auto px-4 py-4 flex flex-col gap-2">
             {navLinks.map((link) => (
               <Link
@@ -226,7 +225,7 @@ export function Navbar() {
                 className={cn(
                   'px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300',
                   pathname === link.href
-                    ? 'text-emerald-400 bg-emerald-400/10 neon-glow'
+                    ? 'text-theme bg-theme-10 neon-glow'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -254,7 +253,7 @@ export function Navbar() {
                 {isAdmin && (
                   <Link
                     href="/admin/dashboard"
-                    className="px-4 py-3 rounded-lg text-sm font-medium text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10"
+                    className="px-4 py-3 rounded-lg text-sm font-medium text-theme hover:opacity-80 hover:bg-theme-10"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Admin Dashboard
@@ -274,7 +273,7 @@ export function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="px-4 py-3 rounded-lg text-sm font-medium text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10"
+                  className="px-4 py-3 rounded-lg text-sm font-medium text-theme hover:opacity-80 hover:bg-theme-10"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Login

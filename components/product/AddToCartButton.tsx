@@ -31,9 +31,9 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
     })
   }
 
-  return (
+   return (
     <Button 
-      className="w-full bg-gaming-green text-black hover:bg-gaming-green/80 text-lg py-6"
+      className="w-full gaming-btn text-lg py-6"
       onClick={handleAddToCart}
       disabled={product.stock_quantity <= 0}
     >

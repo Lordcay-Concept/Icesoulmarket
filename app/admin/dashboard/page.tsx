@@ -61,8 +61,8 @@ export default async function AdminDashboard() {
       title: 'Total Products',
       value: totalProducts,
       icon: Package,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-400/10',
+      color: 'text-theme',
+      bg: 'bg-theme/10',
     },
     {
       title: 'Total Orders',
@@ -92,8 +92,8 @@ export default async function AdminDashboard() {
       title: 'Total Revenue',
       value: `€${totalRevenue.toFixed(2)}`,
       icon: Euro,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-400/10',
+      color: 'text-theme',
+      bg: 'bg-theme/10',
     },
     {
       title: 'This Month',
@@ -110,7 +110,7 @@ export default async function AdminDashboard() {
     switch (status) {
       case 'completed':
       case 'payment_approved':
-        return 'bg-emerald-400/20 text-emerald-400'
+        return 'bg-theme/20 text-theme'
       case 'pending_verification':
         return 'bg-yellow-400/20 text-yellow-400'
       case 'payment_rejected':
@@ -135,14 +135,14 @@ export default async function AdminDashboard() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">
-          <span className="text-emerald-400 neon-glow">Dashboard</span>
+          <span className="text-theme neon-glow">Dashboard</span>
         </h1>
         <p className="text-gray-400 mt-1">Welcome back, Admin!</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {stats.map((stat) => (
-          <Card key={stat.title} className="glass border-emerald-400/10 rounded-2xl">
+          <Card key={stat.title} className="glass border-theme/10 rounded-2xl">
             <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
@@ -160,7 +160,7 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         {revenueStats.map((stat) => (
-          <Card key={stat.title} className="glass border-emerald-400/10 rounded-2xl">
+          <Card key={stat.title} className="glass border-theme/10 rounded-2xl">
             <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
@@ -176,10 +176,10 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <Card className="glass border-emerald-400/10 rounded-2xl">
+      <Card className="glass border-theme/10 rounded-2xl">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
-            <Clock className="h-5 w-5 text-emerald-400" />
+            <Clock className="h-5 w-5 text-theme" />
             Recent Orders
           </CardTitle>
         </CardHeader>
@@ -189,7 +189,7 @@ export default async function AdminDashboard() {
           ) : (
             <div className="space-y-3">
               {recentOrders.map((order: any) => (
-                <div key={order.id} className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-emerald-400/5 border border-emerald-400/10 hover:bg-emerald-400/10 transition-colors">
+                <div key={order.id} className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-theme/5 border border-theme/10 hover:bg-theme/10 transition-colors">
                   <div>
                     <p className="text-white font-medium">#{order.order_number}</p>
                     <p className="text-sm text-gray-400">
@@ -200,7 +200,7 @@ export default async function AdminDashboard() {
                     </p>
                   </div>
                   <div className="flex items-center gap-4 flex-wrap">
-                    <span className="text-emerald-400 font-bold">
+                    <span className="text-theme font-bold">
                       €{order.total_amount?.toFixed(2) || '0.00'}
                     </span>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(order.status)}`}>

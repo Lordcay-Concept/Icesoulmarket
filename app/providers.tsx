@@ -4,6 +4,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import { useCartStore } from '@/lib/stores/cartStore'
+import { ThemeProvider } from '@/components/shared/ThemeProvider'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -24,8 +25,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
+    <ThemeProvider>
     <QueryClientProvider client={queryClient}>
       {children}
     </QueryClientProvider>
+    </ThemeProvider>
   )
 }

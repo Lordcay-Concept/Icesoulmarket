@@ -75,7 +75,7 @@ export function ReviewForm({ productId, userId, existingReview, onReviewSubmitte
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded-lg bg-black-light border border-gaming-green/10">
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded-lg bg-black-light border border-theme/10">
       <h3 className="font-semibold text-white">Write a Review</h3>
 
       <div className="flex items-center gap-1">
@@ -91,7 +91,7 @@ export function ReviewForm({ productId, userId, existingReview, onReviewSubmitte
             <Star
               className={`h-7 w-7 transition-colors ${
                 star <= (hoverRating || rating)
-                  ? 'fill-emerald-400 text-emerald-400'
+                  ? 'fill-theme text-theme'
                   : 'text-gray-600'
               }`}
             />
@@ -103,7 +103,7 @@ export function ReviewForm({ productId, userId, existingReview, onReviewSubmitte
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Share your thoughts about this product..."
-        className="w-full px-3 py-2 rounded-lg bg-black/50 border border-emerald-400/20 focus:border-emerald-400 text-white min-h-[80px]"
+        className="w-full px-3 py-2 rounded-lg bg-black/50 border border-theme/20 focus:border-theme text-white min-h-[80px]"
         disabled={isSubmitting}
       />
 
