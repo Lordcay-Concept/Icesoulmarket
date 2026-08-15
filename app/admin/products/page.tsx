@@ -1,14 +1,15 @@
-// app/admin/products/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
 import { DatabaseService } from '@/lib/services/database.service'
 import { Product } from '@/types/product.types'
 import { MultiImageUpload } from '@/components/admin/MultiImageUpload'
+import { ConfirmDialog } from '@/components/admin/ConfirmDialog'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useCurrency } from '@/lib/hooks/useCurrency'
 import { 
   Plus, 
   Edit, 
@@ -17,15 +18,33 @@ import {
   Package,
   X,
   Check,
-  Sparkles,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ListPlus,
+  Minus
 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 import Image from 'next/image'
-import { ImageUpload } from '@/components/admin/ImageUpload'
 
 const PAGE_SIZE = 12
+
+// Strips anything that isn't URL-safe, collapses repeated dashes,
+// and trims stray leading/trailing dashes — prevents the exact 404 bug
+// caused by pipes, colons, and other special characters in product names.
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')   // remove anything that's not a letter, number, space, or dash
+    .replace(/\s+/g, '-')        // spaces to dashes
+    .replace(/-+/g, '-')         // collapse multiple dashes
+    .replace(/^-+|-+$/g, '')     // trim leading/trailing dashes
+}
+
+interface FeatureRow {
+  key: string
+  value: string
+}
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -35,6 +54,9 @@ export default function AdminProductsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; slug: string; name: string } | null>(null)
+  const { formatPrice } = useCurrency()
+
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -48,6 +70,8 @@ export default function AdminProductsPage() {
     is_active: true,
     is_featured: false,
   })
+
+  const [features, setFeatures] = useState<FeatureRow[]>([])
 
   useEffect(() => {
     loadData()
@@ -74,14 +98,36 @@ export default function AdminProductsPage() {
     }
   }
 
+  const addFeatureRow = () => {
+    setFeatures([...features, { key: '', value: '' }])
+  }
+
+  const removeFeatureRow = (index: number) => {
+    setFeatures(features.filter((_, i) => i !== index))
+  }
+
+  const updateFeatureRow = (index: number, field: 'key' | 'value', value: string) => {
+    const updated = [...features]
+    updated[index][field] = value
+    setFeatures(updated)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       const categoryId = formData.category_id || null
-      
+
+      // Build a features object from the key/value rows, skipping empty ones
+      const featuresObject = features.reduce((acc, row) => {
+        if (row.key.trim()) {
+          acc[row.key.trim()] = row.value.trim()
+        }
+        return acc
+      }, {} as Record<string, string>)
+
       const productData = {
         name: formData.name,
-        slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, '-'),
+        slug: formData.slug ? slugify(formData.slug) : slugify(formData.name),
         category_id: categoryId,
         description: formData.description,
         price: parseFloat(formData.price),
@@ -91,6 +137,7 @@ export default function AdminProductsPage() {
         images: formData.images,
         is_active: formData.is_active,
         is_featured: formData.is_featured,
+        features: Object.keys(featuresObject).length > 0 ? featuresObject : null,
       }
 
       const supabase = DatabaseService.getSupabaseClient()
@@ -120,7 +167,6 @@ export default function AdminProductsPage() {
         })
       }
 
-      // Keep customer-facing pages in sync immediately after admin changes
       await fetch('/api/revalidate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -131,11 +177,11 @@ export default function AdminProductsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path: '/categories' }),
       })
-        await fetch('/api/revalidate', {
+      await fetch('/api/revalidate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path: `/product/${productData.slug}` }),
-        })
+      })
 
       setIsModalOpen(false)
       setEditingProduct(null)
@@ -151,56 +197,54 @@ export default function AdminProductsPage() {
     }
   }
 
-  const handleRemoveImage = (indexToRemove: number) => {
-  setFormData((prev) => ({
-    ...prev,
-    images: prev.images.filter((_, index) => index !== indexToRemove)
-  }))
-}
+  const confirmDelete = async () => {
+    if (!deleteTarget) return
+    const { id, slug } = deleteTarget
 
-  const handleDelete = async (id: string, slug: string) => {  // add slug param
-  if (!confirm('Are you sure you want to delete this product?')) return
-  
-  try {
-    const supabase = DatabaseService.getSupabaseClient()
-    const { error } = await supabase
-      .from('products')
-      .delete()
-      .eq('id', id)
-    
-    if (error) throw error
-    
-    await fetch('/api/revalidate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path: '/products' }),
-    })
-    await fetch('/api/revalidate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path: '/categories' }),
-    })
-    await fetch('/api/revalidate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path: `/product/${slug}` }),
-    })
-    
-    toast({
-      title: 'Success!',
-      description: 'Product deleted successfully',
-      variant: 'success',
-    })
-    loadData()
-  } catch (error) {
-    console.error('Error deleting product:', error)
-    toast({
-      title: 'Error',
-      description: 'Failed to delete product',
-      variant: 'destructive',
-    })
+    try {
+      const supabase = DatabaseService.getSupabaseClient()
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id)
+      
+      if (error) throw error
+      
+      await fetch('/api/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: '/products' }),
+      })
+      await fetch('/api/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: '/categories' }),
+      })
+      await fetch('/api/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: `/product/${slug}` }),
+      })
+      
+      toast({
+        title: 'Success!',
+        description: 'Product deleted successfully',
+        variant: 'success',
+      })
+      loadData()
+    } catch (error: any) {
+      console.error('Error deleting product:', error)
+      toast({
+        title: 'Error',
+        description: error?.message?.includes('foreign key')
+          ? 'This product has order history and cannot be deleted directly. Try marking it Inactive instead.'
+          : 'Failed to delete product',
+        variant: 'destructive',
+      })
+    } finally {
+      setDeleteTarget(null)
+    }
   }
-}
 
   const resetForm = () => {
     setFormData({
@@ -216,6 +260,7 @@ export default function AdminProductsPage() {
       is_active: true,
       is_featured: false,
     })
+    setFeatures([])
   }
 
   const openEditModal = (product: Product) => {
@@ -233,6 +278,13 @@ export default function AdminProductsPage() {
       is_active: product.is_active,
       is_featured: product.is_featured,
     })
+
+    // Convert the stored features object back into editable rows
+    const existingFeatures = product.features
+      ? Object.entries(product.features).map(([key, value]) => ({ key, value: String(value) }))
+      : []
+    setFeatures(existingFeatures)
+
     setIsModalOpen(true)
   }
 
@@ -241,8 +293,6 @@ export default function AdminProductsPage() {
     p.slug.toLowerCase().includes(search.toLowerCase())
   )
 
-  // Reset to page 1 whenever the search term changes, so you're never
-  // stuck on a page number that no longer has results
   useEffect(() => {
     setCurrentPage(1)
   }, [search])
@@ -315,7 +365,7 @@ export default function AdminProductsPage() {
                   <h3 className="text-white font-semibold truncate">{product.name}</h3>
                   <p className="text-sm text-gray-400">{product.category?.name || 'Uncategorized'}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-theme font-bold">${product.price}</span>
+                    <span className="text-theme font-bold">{formatPrice(product.price)}</span>
                     <span className="text-xs text-gray-400">Stock: {product.stock_quantity}</span>
                   </div>
                   <div className="flex items-center gap-1 mt-2">
@@ -346,7 +396,7 @@ export default function AdminProductsPage() {
                   variant="outline"
                   size="sm"
                   className="flex-1 border-red-400/20 text-red-400 hover:bg-red-400/10"
-                  onClick={() => handleDelete(product.id, product.slug)}
+                  onClick={() => setDeleteTarget({ id: product.id, slug: product.slug, name: product.name })}
                 >
                   <Trash2 className="h-3 w-3 mr-1" />
                   Delete
@@ -499,16 +549,63 @@ export default function AdminProductsPage() {
                     className="bg-black/50 border-theme/20 focus:border-theme text-white"
                   />
                 </div>
-                </div>
+              </div>
 
-               <div className="space-y-2 col-span-2">
+              <div className="space-y-2 col-span-2">
                 <Label className="text-gray-300">Product Images</Label>
                 <MultiImageUpload
                     value={formData.images}
                     onChange={(urls: string[]) => setFormData({ ...formData, images: urls })}
                     maxImages={20}
                 />
+              </div>
+
+              {/* NEW: Features editor */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-gray-300">Features</Label>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="border-theme/20 text-theme hover:bg-theme/10"
+                    onClick={addFeatureRow}
+                  >
+                    <ListPlus className="h-3 w-3 mr-1" />
+                    Add Feature
+                  </Button>
                 </div>
+                {features.length === 0 && (
+                  <p className="text-xs text-gray-500">No features added yet. Click &quot;Add Feature&quot; to list product specs (e.g. &quot;Rank: Legendary&quot;, &quot;Level: 200&quot;).</p>
+                )}
+                <div className="space-y-2">
+                  {features.map((row, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        placeholder="Feature name (e.g. Rank)"
+                        value={row.key}
+                        onChange={(e) => updateFeatureRow(index, 'key', e.target.value)}
+                        className="bg-black/50 border-theme/20 focus:border-theme text-white flex-1"
+                      />
+                      <Input
+                        placeholder="Value (e.g. Legendary)"
+                        value={row.value}
+                        onChange={(e) => updateFeatureRow(index, 'value', e.target.value)}
+                        className="bg-black/50 border-theme/20 focus:border-theme text-white flex-1"
+                      />
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        className="border-red-400/20 text-red-400 hover:bg-red-400/10 flex-shrink-0"
+                        onClick={() => removeFeatureRow(index)}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-2">
@@ -549,6 +646,17 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
+
+      {/* Custom delete confirmation, replacing window.confirm */}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete Product?"
+        description={deleteTarget ? `"${deleteTarget.name}" will be permanently removed. This cannot be undone.` : ''}
+        confirmLabel="Delete"
+        isDangerous
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }
