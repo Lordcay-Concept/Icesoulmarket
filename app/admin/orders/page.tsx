@@ -24,7 +24,8 @@ import {
   Calendar,
   KeyRound,
   Gamepad2,
-  Mail
+  Mail,
+  Trash2
 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -34,6 +35,7 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
+  const [deletingOrderId, setDeletingOrderId] = useState<string | null>(null)
   const { formatPrice } = useCurrency()
 
   useEffect(() => {
@@ -76,6 +78,53 @@ export default function AdminOrdersPage() {
     }
   }
 
+  // ✅ NEW: Delete order function - Only for cancelled orders
+  const deleteOrder = async (orderId: string) => {
+    // ✅ Show confirmation alert
+    if (!confirm('⚠️ Are you sure you want to permanently delete this cancelled order? This action cannot be undone.')) {
+      return
+    }
+
+    setDeletingOrderId(orderId)
+    try {
+      const supabase = DatabaseService.getSupabaseClient()
+      
+      // ✅ First delete order items (foreign key constraint)
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .delete()
+        .eq('order_id', orderId)
+
+      if (itemsError) throw itemsError
+
+      // ✅ Then delete the order
+      const { error: orderError } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderId)
+
+      if (orderError) throw orderError
+
+      toast({
+        title: 'Order Deleted!',
+        description: 'The cancelled order has been permanently removed.',
+        variant: 'success',
+      })
+      
+      // ✅ Refresh the orders list
+      loadOrders()
+    } catch (error) {
+      console.error('Error deleting order:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to delete order. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setDeletingOrderId(null)
+    }
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return 'bg-theme/20 text-theme border-theme-500/30'
@@ -108,7 +157,6 @@ export default function AdminOrdersPage() {
     setExpandedOrder(expandedOrder === orderId ? null : orderId)
   }
 
-  // ✅ Helper to check if any fulfillment fields exist
   const hasFulfillmentFields = (order: any) => {
     return order.coins_login_username || 
            order.coins_login_password || 
@@ -154,6 +202,8 @@ export default function AdminOrdersPage() {
           const statusColor = getStatusColor(order.status)
           const statusLabel = getStatusLabel(order.status)
           const hasFulfillment = hasFulfillmentFields(order)
+          const isCancelled = order.status === 'cancelled'
+          const isDeleting = deletingOrderId === order.id
           
           return (
             <Card key={order.id} className="glass border-theme/10 rounded-2xl hover:border-theme/30 transition-all overflow-hidden">
@@ -175,6 +225,12 @@ export default function AdminOrdersPage() {
                         <Badge className="bg-purple-400/20 text-purple-400 border-purple-500/30 text-xs">
                           <KeyRound className="h-3 w-3 mr-1" />
                           Fulfillment Info
+                        </Badge>
+                      )}
+                      {isCancelled && (
+                        <Badge className="bg-red-400/20 text-red-400 border-red-500/30 text-xs">
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Deletable
                         </Badge>
                       )}
                     </div>
@@ -253,7 +309,7 @@ export default function AdminOrdersPage() {
                         </div>
                       </div>
 
-                      {/* ✅ NEW: Fulfillment Fields - Only shows if fields exist */}
+                      {/* Fulfillment Fields */}
                       {hasFulfillment && (
                         <div className="bg-purple-400/5 rounded-xl p-4 border border-purple-400/20">
                           <div className="flex items-center gap-2 text-sm text-purple-400 mb-3">
@@ -261,7 +317,6 @@ export default function AdminOrdersPage() {
                             <span className="font-medium">Fulfillment Information</span>
                           </div>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {/* Coins/Points Login */}
                             {(order.coins_login_username || order.coins_login_password) && (
                               <div className="bg-black/30 rounded-lg p-3 border border-purple-400/10">
                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">
@@ -280,8 +335,6 @@ export default function AdminOrdersPage() {
                                 )}
                               </div>
                             )}
-
-                            {/* Account Delivery Email */}
                             {order.account_delivery_email && (
                               <div className="bg-black/30 rounded-lg p-3 border border-purple-400/10">
                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">
@@ -337,7 +390,7 @@ export default function AdminOrdersPage() {
                         </div>
                       </div>
 
-                      {/* Action Buttons */}
+                      {/* ✅ Action Buttons - Including Delete */}
                       <div className="flex flex-wrap gap-2 pt-2">
                         {(order.status === 'payment_pending' || order.status === 'pending_verification') && (
                           <Button
@@ -367,6 +420,28 @@ export default function AdminOrdersPage() {
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />
                             Mark Completed
+                          </Button>
+                        )}
+                        {/* ✅ NEW: Delete button - ONLY for cancelled orders */}
+                        {isCancelled && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-red-400/30 text-red-400 hover:bg-red-400/10 hover:border-red-400/50"
+                            onClick={() => deleteOrder(order.id)}
+                            disabled={isDeleting}
+                          >
+                            {isDeleting ? (
+                              <>
+                                <div className="h-3 w-3 animate-spin rounded-full border-2 border-red-400 border-t-transparent mr-1" />
+                                Deleting...
+                              </>
+                            ) : (
+                              <>
+                                <Trash2 className="h-3 w-3 mr-1" />
+                                Delete Permanently
+                              </>
+                            )}
                           </Button>
                         )}
                       </div>
