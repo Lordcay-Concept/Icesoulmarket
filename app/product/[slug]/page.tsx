@@ -158,7 +158,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               stockQuantity={product.stock_quantity}
             />
             
-            <p className="text-gray-300 leading-relaxed">
+            <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
               {product.description}
             </p>
             
